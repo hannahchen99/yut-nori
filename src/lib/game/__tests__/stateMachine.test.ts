@@ -229,7 +229,7 @@ describe('MOVE_PIECE – stacking', () => {
     s = inMoving(s, 1, 'do')  // move 1 space
     // r2 is at home; move it 2 spaces → lands on 2, not 1. Let's directly move r0 onto r1:
     // Instead, put r0 at position 0 and move it 1 step → lands on 1 where r1 is
-    s = setPiece(s, 'r0', { location: { status: 'home' } })
+    s = setPiece(s, 'r0', { location: { status: 'reserve' } })
     s = inMoving(s, 1, 'do')
     const after = withMove(s, 'r0')
     expect(after.pieces['r0'].location).toEqual(boardLoc(1, 0))
@@ -261,8 +261,8 @@ describe('MOVE_PIECE – stacking', () => {
     s = setPiece(s, 'b1', { location: boardLoc(5), stackedWith: ['b0'] })
     s = inMoving(s, 2, 'gae')
     const after = withMove(s, 'r0')
-    expect(after.pieces['b0'].location).toEqual({ status: 'home' })
-    expect(after.pieces['b1'].location).toEqual({ status: 'home' })
+    expect(after.pieces['b0'].location).toEqual({ status: 'reserve' })
+    expect(after.pieces['b1'].location).toEqual({ status: 'reserve' })
     expect(after.pieces['b0'].stackedWith).toEqual([])
     expect(after.pieces['b1'].stackedWith).toEqual([])
   })
@@ -278,7 +278,7 @@ describe('MOVE_PIECE – capture', () => {
     s = inMoving(s, 1, 'do')
     const after = withMove(s, 'r0')
     expect(after.pieces['r0'].location).toEqual(boardLoc(5, 4))
-    expect(after.pieces['b0'].location).toEqual({ status: 'home' })
+    expect(after.pieces['b0'].location).toEqual({ status: 'reserve' })
   })
 
   it('capture grants a bonus throw — phase returns to throwing, same team', () => {
@@ -299,8 +299,8 @@ describe('MOVE_PIECE – capture', () => {
     s = setPiece(s, 'b1', { location: boardLoc(5), stackedWith: ['b0'] })
     s = inMoving(s, 2, 'gae')
     const after = withMove(s, 'r0')
-    expect(after.pieces['b0'].location).toEqual({ status: 'home' })
-    expect(after.pieces['b1'].location).toEqual({ status: 'home' })
+    expect(after.pieces['b0'].location).toEqual({ status: 'reserve' })
+    expect(after.pieces['b1'].location).toEqual({ status: 'reserve' })
   })
 })
 

@@ -9,7 +9,7 @@ export type YutMove = {
 export type PieceId = 'r0' | 'r1' | 'r2' | 'r3' | 'b0' | 'b1' | 'b2' | 'b3'
 
 export type PieceLocation =
-  | { status: 'home' }
+  | { status: 'reserve' }
   | { status: 'board'; position: number; enteredFrom: number | null }
   | { status: 'finished' }
 
