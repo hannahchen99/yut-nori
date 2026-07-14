@@ -147,7 +147,7 @@ function freshPiece(id: PieceId): Piece {
   return {
     id,
     team: id.startsWith('r') ? 'red' : 'blue',
-    location: { status: 'home' },
+    location: { status: 'reserve' },
     stackedWith: [],
   }
 }
@@ -209,7 +209,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
       // Resolve start position (home pieces enter via position 0)
       const [startPos, startFrom]: [number, number | null] =
-        leader.location.status === 'home'
+        leader.location.status === 'reserve'
           ? [0, null]
           : [leader.location.position, leader.location.enteredFrom]
 
@@ -253,7 +253,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             }
           }
           for (const id of toHome) {
-            pieces[id] = { ...pieces[id], location: { status: 'home' }, stackedWith: [] }
+            pieces[id] = { ...pieces[id], location: { status: 'reserve' }, stackedWith: [] }
           }
           wasCapture = true
         } else if (canStack(leader, targetPos, { ...state, pieces })) {
