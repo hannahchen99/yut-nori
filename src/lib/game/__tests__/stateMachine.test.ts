@@ -20,7 +20,7 @@ function startedState(): GameState {
 }
 
 function withThrow(state: GameState, result: 'do' | 'gae' | 'geol' | 'yut' | 'mo'): GameState {
-  return gameReducer(state, { type: 'THROW_YUT', result })
+  return gameReducer(state, { type: 'THROW_STICKS', result })
 }
 
 function withMove(state: GameState, pieceId: PieceId, moveIndex = 0): GameState {
@@ -150,7 +150,7 @@ describe('getNextPosition – diagonal 2 finishes', () => {
 
 // ─── Throws ───────────────────────────────────────────────────────────────────
 
-describe('THROW_YUT', () => {
+describe('THROW_STICKS', () => {
   it('yut adds to pendingMoves and stays in throwing phase', () => {
     const s = withThrow(startedState(), 'yut')
     expect(s.pendingMoves).toHaveLength(1)

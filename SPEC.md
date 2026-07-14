@@ -38,7 +38,7 @@ depending on the order pending moves are applied — even though the bonus
 was already fully resolved during the throwing phase.
 
 - What actually happens: rolling 윷/모 immediately grants one extra roll —
-  handled correctly in `THROW_YUT` (`stateMachine.ts:198`), which keeps
+  handled correctly in `THROW_STICKS` (`stateMachine.ts:198`), which keeps
   `phase: 'throwing'` until a non-bonus result is rolled. By the time
   `pendingMoves` is complete and `phase` becomes `'moving'`, every bonus
   roll for the turn has already happened. No further roll is owed once
@@ -73,7 +73,7 @@ was already fully resolved during the throwing phase.
 ### Phase 1 — in scope
 1. **Start / reset flow** — a "Start Game" control dispatches `START_GAME`;
    replaces the current "always ready to throw" demo state.
-2. **Real throw** — "Throw Sticks" dispatches `THROW_YUT` with the rolled
+2. **Real throw** — "Throw Sticks" dispatches `THROW_STICKS` with the rolled
    result instead of only calling `setSticks`/`console.log`. Sticks visual
    stays as-is.
 3. **Turn / phase indicator** — show whose turn it is (red/blue) and the
