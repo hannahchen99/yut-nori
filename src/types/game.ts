@@ -36,7 +36,7 @@ export type GameState = {
 }
 
 export type GameAction =
-  | { type: 'THROW_YUT'; result: YutResult }
+  | { type: 'THROW_STICKS'; result: YutResult }
   | { type: 'MOVE_PIECE'; pieceId: PieceId; moveIndex: number }
   | { type: 'START_GAME' }
 

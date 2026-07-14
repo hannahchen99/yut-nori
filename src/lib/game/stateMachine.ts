@@ -182,7 +182,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       }
     }
 
-    case 'THROW_YUT': {
+    case 'THROW_STICKS': {
       if (state.phase !== 'throwing') return state
 
       const move: YutMove = {
