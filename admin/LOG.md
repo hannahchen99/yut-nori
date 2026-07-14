@@ -2,6 +2,16 @@
 
 ---
 
+## 2026-07-21
+
+### Lessons Learned
+- Going phase by phase, and step by step within a phase, made review and debugging much easier — keep working this way.
+- Save git preferences: review the diff and the exact commit message and approve *before* committing, not just before pushing.
+- When I don't understand code, ask Claude for a pseudocode explanation.
+- Ran into repeated naming collisions (`THROW_YUT` action vs. `'yut'` result value; `'home'` status vs. the UI's "Home" tray) — be more mindful of name choices before proposing them.
+
+---
+
 ## 2026-06-16
 
 ### Accomplished

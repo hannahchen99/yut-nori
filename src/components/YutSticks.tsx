@@ -5,6 +5,7 @@ import { getYutResult, YutResult, YUT_MOVES } from '@/types/game';
 interface YutSticksProps {
   result: number[];
   onThrow: (sticks: number[], outcome: YutResult) => void;
+  disabled?: boolean;
 }
 
 const RESULT_LABELS: Record<YutResult, string> = {
@@ -12,10 +13,10 @@ const RESULT_LABELS: Record<YutResult, string> = {
   gae: '개 (Gae) — Move 2',
   geol: '걸 (Geol) — Move 3',
   yut: '윷 (Yut) — Move 4 + bonus throw',
-  mo: '말 (Mo) — Move 5',
+  mo: '말 (Mo) — Move 5 + bonus throw',
 };
 
-export default function YutSticks({ result, onThrow }: YutSticksProps) {
+export default function YutSticks({ result, onThrow, disabled = false }: YutSticksProps) {
   const outcome = getYutResult(result);
 
   function handleThrow() {
@@ -59,7 +60,8 @@ export default function YutSticks({ result, onThrow }: YutSticksProps) {
 
       <button
         onClick={handleThrow}
-        className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold rounded-lg shadow transition-colors"
+        disabled={disabled}
+        className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg shadow transition-colors"
       >
         Throw Sticks
       </button>
