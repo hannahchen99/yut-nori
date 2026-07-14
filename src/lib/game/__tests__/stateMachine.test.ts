@@ -19,7 +19,6 @@ function startedState(): GameState {
   return gameReducer(initialState, { type: 'START_GAME' })
 }
 
-function withThrow(state: GameState, result: Parameters<typeof gameReducer>[1] & { type: 'THROW_YUT' }['result'] extends infer R ? R extends string ? { type: 'THROW_YUT'; result: R } : never : never extends { result: infer R } ? R : never): GameState
 function withThrow(state: GameState, result: 'do' | 'gae' | 'geol' | 'yut' | 'mo'): GameState {
   return gameReducer(state, { type: 'THROW_YUT', result })
 }
@@ -381,7 +380,7 @@ describe('Turn switching', () => {
     expect(after.pendingMoves).toHaveLength(1)
   })
 
-  it('yut/mo move grants bonus throw after being used (pendingMoves empty)', () => {
+  it('lone bonus-derived move applied last does NOT grant another bonus throw', () => {
     let s = startedState()
     s = {
       ...s,
@@ -390,6 +389,29 @@ describe('Turn switching', () => {
     }
     const after = withMove(s, 'r0')
     expect(after.phase).toBe('throwing')
-    expect(after.currentTeam).toBe('red')
+    expect(after.currentTeam).toBe('blue')
+  })
+
+  it('mixed bonus/non-bonus queue: applying the non-bonus move last still ends the turn', () => {
+    // Rolled [yut, gae] -> pendingMoves = [yut(4, bonus), gae(2, non-bonus)].
+    // Applying gae last (the non-bonus one) must not re-grant a bonus throw
+    // just because an earlier move in the same turn happened to be bonus-derived.
+    let s = startedState()
+    s = setPiece(s, 'r0', { location: boardLoc(1) })
+    s = setPiece(s, 'r1', { location: boardLoc(1) })
+    s = {
+      ...s,
+      phase: 'moving',
+      pendingMoves: [
+        { result: 'yut', spaces: 4, bonusThrow: true },
+        { result: 'gae', spaces: 2, bonusThrow: false },
+      ],
+    }
+    s = withMove(s, 'r0', 0) // apply the bonus-derived move first
+    expect(s.pendingMoves).toHaveLength(1)
+    const after = withMove(s, 'r1', 0) // apply the non-bonus move last
+    expect(after.currentTeam).toBe('blue')
+    expect(after.phase).toBe('throwing')
+    expect(after.pendingMoves).toHaveLength(0)
   })
 })

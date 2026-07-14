@@ -222,7 +222,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const groupIds: PieceId[] = [action.pieceId, ...leader.stackedWith]
 
       // Apply move to every piece in the group
-      let pieces: Record<PieceId, Piece> = { ...state.pieces }
+      const pieces: Record<PieceId, Piece> = { ...state.pieces }
       for (const id of groupIds) {
         pieces[id] = { ...pieces[id], location: newLocation }
       }
@@ -299,7 +299,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         return { ...state, pieces, pendingMoves, phase: 'moving' }
       }
 
-      if (wasCapture || usedMove.bonusThrow) {
+      if (wasCapture) {
         // Bonus throw: same team throws again
         return { ...state, pieces, pendingMoves: [], phase: 'throwing' }
       }
