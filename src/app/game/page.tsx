@@ -27,8 +27,12 @@ export default function GamePage() {
     dispatch({ type: 'START_GAME' });
   }
 
-  function filterPieces(team: Team, status: 'reserve' | 'finished') {
+  function filterTrayPieces(team: Team, status: 'reserve' | 'finished') {
     return Object.values(state.pieces).filter(p => p.team === team && p.location.status === status);
+  }
+
+  function getBoardPieces() {
+    return Object.values(state.pieces).filter(p => p.location.status === 'board');
   }
 
   return (
@@ -39,7 +43,7 @@ export default function GamePage() {
         </h1>
         <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
           <div className="flex-1 min-w-0">
-            <Board />
+            <Board pieces={getBoardPieces()} />
           </div>
           <div className="flex-none flex flex-col items-center gap-6">
             {state.phase === 'waiting' ? (
@@ -69,24 +73,24 @@ export default function GamePage() {
                     <Tray
                       team="red"
                       label="Reserve"
-                      pieces={filterPieces("red", "reserve")}
+                      pieces={filterTrayPieces("red", "reserve")}
                     />
                     <Tray
                       team="red"
                       label="Home"
-                      pieces={filterPieces("red", "finished")}
+                      pieces={filterTrayPieces("red", "finished")}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
                     <Tray
                       team="blue"
                       label="Reserve"
-                      pieces={filterPieces("blue", "reserve")}
+                      pieces={filterTrayPieces("blue", "reserve")}
                     />
                     <Tray
                       team="blue"
                       label="Home"
-                      pieces={filterPieces("blue", "finished")}
+                      pieces={filterTrayPieces("blue", "finished")}
                     />
                   </div>
                 </div>

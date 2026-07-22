@@ -1,5 +1,7 @@
 'use client';
 
+import type { Piece } from '@/types/game';
+
 type NodeType = 'regular' | 'corner' | 'center' | 'diag1' | 'diag2';
 
 interface BoardPos {
@@ -78,12 +80,39 @@ function highlightRadius(type: NodeType): number {
   return type === 'corner' || type === 'center' ? 26 : 20;
 }
 
-interface BoardProps {
-  highlightedPositions?: number[];
+const TOKEN_RADIUS = 12;
+const TOKEN_OFFSET = 12; // shifts the piece token up-right from the position node's center
+
+interface TokenStyle {
+  fill: string;
+  badgeText: string;
 }
 
-export default function Board({ highlightedPositions = [] }: BoardProps) {
+const TOKEN_STYLES: Record<Piece['team'], TokenStyle> = {
+  red: { fill: '#ef4444', badgeText: '#b91c1c' },
+  blue: { fill: '#3b82f6', badgeText: '#1d4ed8' },
+};
+
+// sort pieces on the board by position
+function groupBoardPiecesByPosition(pieces: Piece[]): Map<number, Piece[]> {
+  const groups = new Map<number, Piece[]>();
+  for (const piece of pieces) {
+    if (piece.location.status !== 'board') continue;
+    const group = groups.get(piece.location.position) ?? [];
+    group.push(piece);
+    groups.set(piece.location.position, group);
+  }
+  return groups;
+}
+
+interface BoardProps {
+  highlightedPositions?: number[];
+  pieces?: Piece[];
+}
+
+export default function Board({ highlightedPositions = [], pieces = [] }: BoardProps) {
   const highlighted = new Set(highlightedPositions);
+  const pieceGroups = groupBoardPiecesByPosition(pieces);
 
   return (
     <div className="flex items-center justify-center w-full">
@@ -165,6 +194,46 @@ export default function Board({ highlightedPositions = [] }: BoardProps) {
                 >
                   HOME
                 </text>
+              )}
+            </g>
+          );
+        })}
+
+        {/* 5. Pieces */}
+        {Array.from(pieceGroups.entries()).map(([position, group]) => {
+          const pos = POSITIONS[position];
+          const style = TOKEN_STYLES[group[0].team];
+          const cx = pos.x + TOKEN_OFFSET;
+          const cy = pos.y - TOKEN_OFFSET;
+          return (
+            <g key={`piece-${position}`}>
+              <circle
+                cx={cx} cy={cy}
+                r={TOKEN_RADIUS}
+                fill={style.fill}
+                stroke="#ffffff"
+                strokeWidth={2}
+              />
+              {group.length > 1 && (
+                <>
+                  <circle
+                    cx={cx + 10} cy={cy - 10}
+                    r={9}
+                    fill="#ffffff"
+                    stroke={style.fill}
+                    strokeWidth={1.5}
+                  />
+                  <text
+                    x={cx + 10} y={cy - 10}
+                    textAnchor="middle"
+                    dominantBaseline="central"
+                    fontSize={11}
+                    fontWeight="bold"
+                    fill={style.badgeText}
+                  >
+                    {group.length}
+                  </text>
+                </>
               )}
             </g>
           );
