@@ -3,6 +3,7 @@
 import { useReducer, useState } from 'react';
 import Board from '@/components/Board';
 import YutSticks from '@/components/YutSticks';
+import Tray, { Team } from '@/components/Tray';
 import { YutResult } from '@/types/game';
 import gameReducer, { initialState } from '@/lib/game/stateMachine';
 
@@ -24,6 +25,10 @@ export default function GamePage() {
 
   function handleStart() {
     dispatch({ type: 'START_GAME' });
+  }
+
+  function filterPieces(team: Team, status: 'reserve' | 'finished') {
+    return Object.values(state.pieces).filter(p => p.team === team && p.location.status === status);
   }
 
   return (
@@ -59,6 +64,32 @@ export default function GamePage() {
                   onThrow={handleThrow}
                   disabled={state.phase !== 'throwing'}
                 />
+                <div className="flex flex-row gap-6 p-4">
+                  <div className="flex flex-col gap-2">
+                    <Tray
+                      team="red"
+                      label="Reserve"
+                      pieces={filterPieces("red", "reserve")}
+                    />
+                    <Tray
+                      team="red"
+                      label="Home"
+                      pieces={filterPieces("red", "finished")}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Tray
+                      team="blue"
+                      label="Reserve"
+                      pieces={filterPieces("blue", "reserve")}
+                    />
+                    <Tray
+                      team="blue"
+                      label="Home"
+                      pieces={filterPieces("blue", "finished")}
+                    />
+                  </div>
+                </div>
               </>
             )}
           </div>
