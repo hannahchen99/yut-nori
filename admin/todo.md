@@ -7,6 +7,7 @@
 - [ ] Review rules page for accuracy `#content`
 
 ## Nice to Have
+- [ ] Configure Prettier for consistent formatting (indentation, quote style, spacing) `#tooling`
 - [ ] Update styling for board `#styling` `#board`
 - [ ] Update styling for sticks `#styling` `#sticks`
 - [ ] Add animation for throwing, moving, and capturing pieces (framer-motion is installed but unused) `#animation` `#sticks`
