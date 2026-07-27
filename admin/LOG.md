@@ -2,6 +2,16 @@
 
 ---
 
+## 2026-07-27
+
+### Lessons Learned
+- Clarify game logic in plain conversation *before* building, especially for rules with edge cases (e.g. the center-junction departure rule in commit `631d2f3`) — talking through exact examples surfaced a second, related bug (ambiguous stack direction at a shared junction) that would've been easy to miss otherwise. Saved that one to `admin/todo.md` instead of fixing it inline, so it doesn't get lost.
+- Manual play-testing in the browser is what actually caught the center-junction bug in the first place — the automated test suite was fully green the whole time; the bug only became visible by actually moving a piece through the diagonal shortcut and watching where it landed.
+- Need to actively think about UI/UX, not just correctness — non-intuitive states (e.g. "what am I supposed to do right now?") need explicit, plain-language guidance, like the turn instructions added in commit `4cca771`. That gap wasn't obvious until playing the game and feeling confused mid-turn.
+- For future specs: add a dedicated UX section to capture these improvements up front, rather than discovering them ad hoc during/after implementation.
+
+---
+
 ## 2026-07-21
 
 ### Lessons Learned

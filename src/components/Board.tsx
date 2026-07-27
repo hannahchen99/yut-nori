@@ -1,6 +1,6 @@
 'use client';
 
-import type { Piece } from '@/types/game';
+import type { Piece, PieceId } from '@/types/game';
 
 type NodeType = 'regular' | 'corner' | 'center' | 'diag1' | 'diag2';
 
@@ -108,9 +108,16 @@ function groupBoardPiecesByPosition(pieces: Piece[]): Map<number, Piece[]> {
 interface BoardProps {
   highlightedPositions?: number[];
   pieces?: Piece[];
+  onPieceClick?: (pieceId: PieceId) => void;
+  selectableTeam?: Piece['team'];
 }
 
-export default function Board({ highlightedPositions = [], pieces = [] }: BoardProps) {
+export default function Board({
+  highlightedPositions = [],
+  pieces = [],
+  onPieceClick,
+  selectableTeam,
+}: BoardProps) {
   const highlighted = new Set(highlightedPositions);
   const pieceGroups = groupBoardPiecesByPosition(pieces);
 
@@ -205,8 +212,13 @@ export default function Board({ highlightedPositions = [], pieces = [] }: BoardP
           const style = TOKEN_STYLES[group[0].team];
           const cx = pos.x + TOKEN_OFFSET;
           const cy = pos.y - TOKEN_OFFSET;
+          const clickable = group[0].team === selectableTeam;
           return (
-            <g key={`piece-${position}`}>
+            <g
+              key={`piece-${position}`}
+              onClick={clickable ? () => onPieceClick?.(group[0].id) : undefined}
+              style={clickable ? { cursor: 'pointer' } : undefined}
+            >
               <circle
                 cx={cx} cy={cy}
                 r={TOKEN_RADIUS}
