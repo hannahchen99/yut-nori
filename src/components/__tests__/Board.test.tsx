@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
-import Board from '../Board'
+import Board, { POSITIONS, DIAG_EDGES } from '../Board'
 import type { Piece, PieceId } from '@/types/game'
 
 function boardPiece(id: PieceId, team: 'red' | 'blue', position: number): Piece {
@@ -38,5 +38,21 @@ describe('Board pieces', () => {
     const { container } = render(<Board pieces={pieces} />)
     expect(container.querySelectorAll('circle[fill="#ef4444"]')).toHaveLength(0)
     expect(container.querySelectorAll('circle[fill="#3b82f6"]')).toHaveLength(0)
+  })
+})
+
+describe('Diagonal 1 node positions (5 -> 20 -> 21 -> 22 -> 23 -> 24 -> 15)', () => {
+  it('places 20 and 21 nearer corner 5, and 23 and 24 nearer corner 15', () => {
+    expect(POSITIONS[20]).toEqual({ x: 417, y: 83, type: 'diag1' })
+    expect(POSITIONS[21]).toEqual({ x: 333, y: 167, type: 'diag1' })
+    expect(POSITIONS[23]).toEqual({ x: 167, y: 333, type: 'diag1' })
+    expect(POSITIONS[24]).toEqual({ x: 83, y: 417, type: 'diag1' })
+  })
+
+  it('connects the diagonal to corner 5 via 20, and to corner 15 via 24', () => {
+    expect(DIAG_EDGES).toContainEqual([5, 20])
+    expect(DIAG_EDGES).toContainEqual([24, 15])
+    expect(DIAG_EDGES).not.toContainEqual([15, 20])
+    expect(DIAG_EDGES).not.toContainEqual([24, 5])
   })
 })

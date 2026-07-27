@@ -122,11 +122,21 @@ describe('getNextPosition – corner 10 shortcut (diagonal 2)', () => {
 })
 
 describe('getNextPosition – center junction (22)', () => {
-  it('piece on diagonal 1 at 22 continues to 23, not 27', () => {
-    expect(getNextPosition(22, 21, 1)).toEqual({ position: 23, enteredFrom: 22 })
+  it('piece passing through 22 from diagonal 1 continues to 23, not 27', () => {
+    // 21→22(pass-through)→23
+    expect(getNextPosition(21, 20, 2)).toEqual({ position: 23, enteredFrom: 22 })
   })
 
-  it('piece on diagonal 2 at 22 continues to 27, not 23', () => {
+  it('piece passing through 22 from diagonal 2 continues to 27, not 23', () => {
+    // 26→22(pass-through)→27
+    expect(getNextPosition(26, 25, 2)).toEqual({ position: 27, enteredFrom: 22 })
+  })
+
+  it('piece departing from 22 (already resting there) goes to 27, even if it arrived via diagonal 1', () => {
+    expect(getNextPosition(22, 21, 1)).toEqual({ position: 27, enteredFrom: 22 })
+  })
+
+  it('piece departing from 22 (already resting there) goes to 27 when it arrived via diagonal 2', () => {
     expect(getNextPosition(22, 26, 1)).toEqual({ position: 27, enteredFrom: 22 })
   })
 })

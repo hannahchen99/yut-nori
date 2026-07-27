@@ -10,7 +10,7 @@ interface BoardPos {
   type: NodeType;
 }
 
-const POSITIONS: BoardPos[] = [
+export const POSITIONS: BoardPos[] = [
   // Perimeter — counter-clockwise from bottom-right, up the right side first
   { x: 500, y: 500, type: 'corner'  }, // 0  HOME
   { x: 500, y: 400, type: 'regular' }, // 1
@@ -32,12 +32,12 @@ const POSITIONS: BoardPos[] = [
   { x: 200, y: 500, type: 'regular' }, // 17
   { x: 300, y: 500, type: 'regular' }, // 18
   { x: 400, y: 500, type: 'regular' }, // 19
-  // Diagonal 1 — corner 15 (bottom-left) to corner 5 (top-right)
-  { x:  83, y: 417, type: 'diag1'   }, // 20
-  { x: 167, y: 333, type: 'diag1'   }, // 21
+  // Diagonal 1 — corner 5 (top-right) to corner 15 (bottom-left)
+  { x: 417, y:  83, type: 'diag1'   }, // 20
+  { x: 333, y: 167, type: 'diag1'   }, // 21
   { x: 250, y: 250, type: 'center'  }, // 22 — shared center
-  { x: 333, y: 167, type: 'diag1'   }, // 23
-  { x: 417, y:  83, type: 'diag1'   }, // 24
+  { x: 167, y: 333, type: 'diag1'   }, // 23
+  { x:  83, y: 417, type: 'diag1'   }, // 24
   // Diagonal 2 — corner 10 (top-left) to corner 0 (bottom-right)
   { x:  83, y:  83, type: 'diag2'   }, // 25
   { x: 167, y: 167, type: 'diag2'   }, // 26
@@ -46,8 +46,8 @@ const POSITIONS: BoardPos[] = [
   { x: 417, y: 417, type: 'diag2'   }, // 28
 ];
 
-const DIAG_EDGES: [number, number][] = [
-  [15, 20], [20, 21], [21, 22], [22, 23], [23, 24], [24, 5],
+export const DIAG_EDGES: [number, number][] = [
+  [5, 20], [20, 21], [21, 22], [22, 23], [23, 24], [24, 15],
   [10, 25], [25, 26], [26, 22], [22, 27], [27, 28], [28, 0],
 ];
 

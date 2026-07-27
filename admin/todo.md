@@ -5,6 +5,7 @@
 - [ ] Learn Next.js concepts in phase 1 `#learning`
 - [ ] Add back/home page button to game page `#navigation` `#ui`
 - [ ] Review rules page for accuracy `#content`
+- [ ] Fix: when two same-team pieces merge into a stack at the center junction (node 22) having arrived via different diagonals, the stack's future movement direction is governed by whichever piece's `enteredFrom` the player happens to dispatch with — the two pieces genuinely disagree about which diagonal they came from, and the board graph has no way to represent a stack with two valid exit directions `#bug` `#gameplay`
 
 ## Nice to Have
 - [ ] Configure Prettier for consistent formatting (indentation, quote style, spacing) `#tooling`

@@ -84,6 +84,13 @@ function stepOnce(
     return { position: CORNER_SHORTCUTS[position], enteredFrom: position }
   }
 
+  // Departing from the center itself always continues via diagonal 2's tail,
+  // regardless of which diagonal the piece arrived by — only *passing through*
+  // 22 respects the entry-dependent junction exits below.
+  if (departing && position === 22) {
+    return { position: 27, enteredFrom: 22 }
+  }
+
   const node = BOARD[position]
   if (node === undefined) throw new Error(`Unknown board position: ${position}`)
 
