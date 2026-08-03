@@ -26,7 +26,7 @@ export default function YutSticks({ result, onThrow, disabled = false }: YutStic
 
   return (
     <div className="flex flex-col items-center gap-6">
-      <h2 className="text-lg font-semibold text-gray-700">Yut Sticks</h2>
+      <h2 className="text-lg font-semibold text-heading">Yut Sticks</h2>
 
       <div className="flex gap-4">
         {result.map((side, i) => (
@@ -34,26 +34,26 @@ export default function YutSticks({ result, onThrow, disabled = false }: YutStic
             <div
               className={`w-10 h-24 rounded-2xl border-2 flex items-center justify-center transition-all ${
                 side === 0
-                  ? 'bg-amber-100 border-amber-400 shadow-inner'
-                  : 'bg-amber-700 border-amber-900 shadow-md'
+                  ? 'bg-paper border-wood shadow-inner'
+                  : 'bg-wood-dark border-ink shadow-md'
               }`}
             >
               {side === 0 ? (
-                <div className="w-6 h-0.5 bg-amber-400 rounded" />
+                <div className="w-6 h-0.5 bg-wood rounded" />
               ) : (
-                <div className="w-5 h-5 rounded-full border-2 border-amber-400 opacity-60" />
+                <div className="w-5 h-5 rounded-full border-2 border-gold opacity-70" />
               )}
             </div>
-            <span className="text-xs text-gray-500">{side === 0 ? 'flat' : 'round'}</span>
+            <span className="text-xs text-faint">{side === 0 ? 'flat' : 'round'}</span>
           </div>
         ))}
       </div>
 
       <div className="text-center">
-        <p className="text-sm font-medium text-gray-600">
+        <p className="text-sm font-medium text-wood-muted">
           Flat up: {result.filter((s) => s === 0).length}
         </p>
-        <p className="text-base font-bold text-indigo-700 mt-1">
+        <p className="text-base font-bold text-ink-red mt-1">
           {RESULT_LABELS[outcome]}
         </p>
       </div>
@@ -61,7 +61,7 @@ export default function YutSticks({ result, onThrow, disabled = false }: YutStic
       <button
         onClick={handleThrow}
         disabled={disabled}
-        className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg shadow transition-colors"
+        className="px-6 py-2.5 bg-red-piece hover:bg-red-button-hover active:bg-red-button-active disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg shadow transition-colors"
       >
         Throw Sticks
       </button>

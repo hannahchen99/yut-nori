@@ -48,3 +48,10 @@
 ---
 
 <!-- Add new entries at the top, below this line -->
+
+## 2026-08-03
+
+### Lessons Learned
+- When proposing a way to solve a problem, state the goal first (e.g. "one place to define colors"), then the suggested approach, and explicitly ask for feedback or alternatives — especially whether an existing library already has a built-in feature for it, instead of defaulting to a custom solution. The Malpan color palette went to JS constants first; only after asking "is there a better way using Tailwind's theme system?" did it turn out Tailwind's `@theme` block does this natively, causing a full rework of `Board.tsx`, `Tray.tsx`, `YutSticks.tsx`, and three page files.
+
+---

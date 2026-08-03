@@ -1,7 +1,37 @@
 @import "tailwindcss";
 
+/* Malpan palette — single source of truth. Tailwind auto-generates
+   color utilities (bg, text, border, fill, stroke, etc.) from these tokens. */
+@theme {
+  --color-paper: #f1e6cf;
+  --color-parchment: #e7d9b8;
+  --color-wood: #8a6f4b;
+  --color-wood-dark: #5b3d21;
+  --color-wood-muted: #6b5738;
+  --color-ink: #2b1d0e;
+  --color-ink-red: #8a2e1f;
+  --color-gold: #e3b23c;
+  --color-jade: #1f4e42;
+
+  --color-heading: #4a3c28;
+  --color-faint: #8a7c63;
+
+  --color-red-piece: #b3432b;
+  --color-red-piece-badge: var(--color-ink-red);
+  --color-red-tray-border: #c9a688;
+  --color-red-button-hover: var(--color-ink-red);
+  --color-red-button-active: #6e2418;
+
+  --color-blue-piece: #7b9fc9;
+  --color-blue-piece-badge: #2c4a6e;
+  --color-blue-tray-border: #b7c4dc;
+
+  --color-surface: #ffffff;
+  --color-border: #ddc9a3;
+}
+
 :root {
-  --background: #ffffff;
+  --background: var(--color-paper);
   --foreground: #171717;
 }
 

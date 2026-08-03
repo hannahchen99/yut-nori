@@ -3,14 +3,14 @@ import { Piece } from '@/types/game'
 export type Team = 'red' | 'blue';
 
 interface PieceStyle {
-  border: string
-  label: string
-  background: string
+  borderClass: string
+  labelClass: string
+  backgroundClass: string
 }
 
 const PIECE_STYLES: Record<Team, PieceStyle> = {
-  red: { border: "border-red-300", label: "text-red-600", background: "bg-red-400" },
-  blue: { border: "border-blue-300", label: "text-blue-600", background: "bg-blue-400" },
+  red: { borderClass: 'border-red-tray-border', labelClass: 'text-red-piece-badge', backgroundClass: 'bg-red-piece' },
+  blue: { borderClass: 'border-blue-tray-border', labelClass: 'text-blue-piece-badge', backgroundClass: 'bg-blue-piece' },
 }
 
 interface TrayProps {
@@ -23,13 +23,15 @@ interface TrayProps {
 
 export default function Tray({ team, label, pieces, onPieceClick, selectable = false }: TrayProps) {
 
+  const style = PIECE_STYLES[team]
+
   return (
-    <div className={`rounded-lg border ${PIECE_STYLES[team].border} p-4 flex flex-col gap-2`}>
-      <p className={`${PIECE_STYLES[team].label}`}>{`${team.toUpperCase()} | ${label} (${pieces.length})`}</p>
+    <div className={`rounded-lg border bg-paper p-4 flex flex-col gap-2 ${style.borderClass}`}>
+      <p className={style.labelClass}>{`${team.toUpperCase()} | ${label} (${pieces.length})`}</p>
       <div className="flex flex-row items-center justify-evenly min-h-6">
         {pieces.map(p => (
           <div
-            className={`w-6 h-6 rounded-full ${PIECE_STYLES[team].background} ${selectable ? 'cursor-pointer hover:opacity-75 transition-opacity' : ''}`}
+            className={`piece-dot w-6 h-6 rounded-full border-2 border-ink ${style.backgroundClass} ${selectable ? 'cursor-pointer hover:opacity-75 transition-opacity' : ''}`}
             key={p.id}
             onClick={selectable ? () => onPieceClick?.(p.id) : undefined}
           />

@@ -34,12 +34,12 @@ const sections: Section[] = [
         <p>Each throw produces one of five outcomes based on how many sticks land flat-side up:</p>
         <table className="w-full text-sm border-collapse">
           <thead>
-            <tr className="bg-indigo-50">
-              <th className="border border-gray-200 px-3 py-2 text-left">Flat up</th>
-              <th className="border border-gray-200 px-3 py-2 text-left">Name</th>
-              <th className="border border-gray-200 px-3 py-2 text-left">Hangul</th>
-              <th className="border border-gray-200 px-3 py-2 text-left">Spaces moved</th>
-              <th className="border border-gray-200 px-3 py-2 text-left">Bonus?</th>
+            <tr className="bg-parchment">
+              <th className="border border-border px-3 py-2 text-left">Flat up</th>
+              <th className="border border-border px-3 py-2 text-left">Name</th>
+              <th className="border border-border px-3 py-2 text-left">Hangul</th>
+              <th className="border border-border px-3 py-2 text-left">Spaces moved</th>
+              <th className="border border-border px-3 py-2 text-left">Bonus?</th>
             </tr>
           </thead>
           <tbody>
@@ -50,12 +50,12 @@ const sections: Section[] = [
               { flat: 3, name: 'Yut', hangul: '윷', spaces: 4, bonus: '✓ extra throw' },
               { flat: 4, name: 'Mo', hangul: '말', spaces: 5, bonus: '✓ extra throw' },
             ].map((row) => (
-              <tr key={row.name} className="odd:bg-white even:bg-gray-50">
-                <td className="border border-gray-200 px-3 py-2">{row.flat}</td>
-                <td className="border border-gray-200 px-3 py-2 font-medium">{row.name}</td>
-                <td className="border border-gray-200 px-3 py-2">{row.hangul}</td>
-                <td className="border border-gray-200 px-3 py-2">{row.spaces}</td>
-                <td className="border border-gray-200 px-3 py-2 text-indigo-600">{row.bonus}</td>
+              <tr key={row.name} className="odd:bg-white even:bg-paper">
+                <td className="border border-border px-3 py-2">{row.flat}</td>
+                <td className="border border-border px-3 py-2 font-medium">{row.name}</td>
+                <td className="border border-border px-3 py-2">{row.hangul}</td>
+                <td className="border border-border px-3 py-2">{row.spaces}</td>
+                <td className="border border-border px-3 py-2 text-ink-red">{row.bonus}</td>
               </tr>
             ))}
           </tbody>
@@ -114,26 +114,26 @@ const sections: Section[] = [
 
 export default function HowToPlay() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
+    <main className="min-h-screen bg-paper">
       <div className="max-w-2xl mx-auto px-4 py-12">
         <Link
           href="/"
-          className="text-indigo-600 hover:text-indigo-800 text-sm font-medium mb-8 inline-block"
+          className="text-ink-red hover:text-red-button-active text-sm font-medium mb-8 inline-block"
         >
           ← Back to home
         </Link>
-        <h1 className="text-4xl font-extrabold text-indigo-900 mb-2">
+        <h1 className="text-4xl font-extrabold mb-2 text-ink-red">
           How to Play Yut Nori
         </h1>
-        <p className="text-gray-500 mb-10 text-lg">윷놀이 규칙</p>
+        <p className="mb-10 text-lg text-faint">윷놀이 규칙</p>
 
         <div className="space-y-10">
           {sections.map((section) => (
             <section key={section.id} id={section.id}>
-              <h2 className="text-xl font-bold text-indigo-800 mb-3 pb-1 border-b border-indigo-100">
+              <h2 className="text-xl font-bold mb-3 pb-1 border-b border-border text-ink-red">
                 {section.title}
               </h2>
-              <div className="text-gray-700 leading-relaxed">{section.content}</div>
+              <div className="leading-relaxed text-wood-muted">{section.content}</div>
             </section>
           ))}
         </div>
@@ -141,7 +141,7 @@ export default function HowToPlay() {
         <div className="mt-12 text-center">
           <Link
             href="/game"
-            className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-lg transition-colors"
+            className="px-8 py-3 bg-red-piece hover:bg-red-button-hover text-white font-semibold rounded-xl shadow-lg transition-colors"
           >
             Play Now
           </Link>

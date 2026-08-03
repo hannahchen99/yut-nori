@@ -81,9 +81,9 @@ export default function GamePage() {
   const instructionText = getInstructionText();
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
+    <main className="min-h-screen bg-paper">
       <div className="max-w-5xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-extrabold text-indigo-900 mb-8 text-center">
+        <h1 className="text-3xl font-extrabold mb-8 text-center text-ink-red">
           윷놀이 — Yut Nori
         </h1>
         <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
@@ -98,7 +98,7 @@ export default function GamePage() {
             {state.phase === 'waiting' ? (
               <button
                 onClick={handleStart}
-                className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold rounded-lg shadow transition-colors"
+                className="px-6 py-2.5 bg-red-piece hover:bg-red-button-hover active:bg-red-button-active text-white font-semibold rounded-lg shadow transition-colors"
               >
                 Start Game
               </button>
@@ -106,14 +106,14 @@ export default function GamePage() {
               <>
                 <p className="text-center">
                   <span
-                    className={`font-bold ${state.currentTeam === 'red' ? 'text-red-600' : 'text-blue-600'}`}
+                    className={`font-bold ${state.currentTeam === 'red' ? 'text-red-piece-badge' : 'text-blue-piece-badge'}`}
                   >
                     {state.currentTeam === 'red' ? 'Red' : 'Blue'}&apos;s turn
                   </span>
-                  <span className="text-gray-500"> — {PHASE_LABELS[state.phase]}</span>
+                  <span className="text-faint"> — {PHASE_LABELS[state.phase]}</span>
                 </p>
                 {instructionText && (
-                  <p className="text-center text-indigo-700 font-semibold">
+                  <p className="text-center font-semibold text-ink-red">
                     {instructionText}
                   </p>
                 )}
@@ -127,7 +127,7 @@ export default function GamePage() {
                     {state.pendingMoves.map((move, index) => (
                       <span
                         key={index}
-                        className="bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-full px-3 py-1 text-sm font-medium"
+                        className="bg-parchment border border-border text-ink-red rounded-full px-3 py-1 text-sm font-medium"
                       >
                         {RESULT_NAMES[move.result]} {move.spaces}
                       </span>
@@ -135,13 +135,13 @@ export default function GamePage() {
                   </div>
                 )}
                 {selectedPieceId && state.pendingMoves.length > 1 && (
-                  <div className="rounded-lg border border-indigo-200 bg-white p-4 flex flex-col gap-2">
-                    <p className="text-sm font-medium text-gray-700">Choose a move</p>
+                  <div className="rounded-lg border border-border bg-surface p-4 flex flex-col gap-2">
+                    <p className="text-sm font-medium text-wood-muted">Choose a move</p>
                     {state.pendingMoves.map((move, index) => (
                       <button
                         key={index}
                         onClick={() => handleMoveChoice(index)}
-                        className="px-3.5 py-2.5 bg-white text-indigo-700 border border-indigo-200 rounded-lg text-sm font-medium text-left hover:bg-indigo-50 transition-colors"
+                        className="px-3.5 py-2.5 bg-surface text-ink-red border border-border rounded-lg text-sm font-medium text-left hover:bg-parchment transition-colors"
                       >
                         {RESULT_NAMES[move.result]} — Move {move.spaces}
                       </button>

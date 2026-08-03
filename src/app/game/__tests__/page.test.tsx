@@ -26,12 +26,12 @@ describe('GamePage move selection', () => {
     mockThrow([true, false, false, false]) // flatCount 1 -> 'do', non-bonus
     fireEvent.click(screen.getByRole('button', { name: 'Throw Sticks' }))
 
-    const redCircles = trayCard('RED \\| Reserve').querySelectorAll('.bg-red-400')
+    const redCircles = trayCard('RED \\| Reserve').querySelectorAll('.piece-dot')
     expect(redCircles).toHaveLength(4)
     fireEvent.click(redCircles[0])
 
-    expect(trayCard('RED \\| Reserve').querySelectorAll('.bg-red-400')).toHaveLength(3)
-    expect(document.querySelectorAll('circle[fill="#ef4444"]')).toHaveLength(1)
+    expect(trayCard('RED \\| Reserve').querySelectorAll('.piece-dot')).toHaveLength(3)
+    expect(document.querySelectorAll('circle.fill-red-piece')).toHaveLength(1)
   })
 
   it('multiple pending moves open a chooser instead of moving immediately', () => {
@@ -43,16 +43,16 @@ describe('GamePage move selection', () => {
     mockThrow([true, true, false, false]) // flatCount 2 -> 'gae', non-bonus
     fireEvent.click(screen.getByRole('button', { name: 'Throw Sticks' }))
 
-    fireEvent.click(trayCard('RED \\| Reserve').querySelectorAll('.bg-red-400')[0])
+    fireEvent.click(trayCard('RED \\| Reserve').querySelectorAll('.piece-dot')[0])
 
     // no move applied yet — the chooser should appear instead
-    expect(trayCard('RED \\| Reserve').querySelectorAll('.bg-red-400')).toHaveLength(4)
-    expect(document.querySelectorAll('circle[fill="#ef4444"]')).toHaveLength(0)
+    expect(trayCard('RED \\| Reserve').querySelectorAll('.piece-dot')).toHaveLength(4)
+    expect(document.querySelectorAll('circle.fill-red-piece')).toHaveLength(0)
 
     fireEvent.click(screen.getByRole('button', { name: /Move 4/ }))
 
-    expect(trayCard('RED \\| Reserve').querySelectorAll('.bg-red-400')).toHaveLength(3)
-    expect(document.querySelectorAll('circle[fill="#ef4444"]')).toHaveLength(1)
+    expect(trayCard('RED \\| Reserve').querySelectorAll('.piece-dot')).toHaveLength(3)
+    expect(document.querySelectorAll('circle.fill-red-piece')).toHaveLength(1)
     expect(screen.queryByText('Choose a move')).toBeNull()
   })
 
@@ -63,10 +63,10 @@ describe('GamePage move selection', () => {
     mockThrow([true, false, false, false]) // 'do', non-bonus -> red's turn, phase moving
     fireEvent.click(screen.getByRole('button', { name: 'Throw Sticks' }))
 
-    const blueCircles = trayCard('BLUE \\| Reserve').querySelectorAll('.bg-blue-400')
+    const blueCircles = trayCard('BLUE \\| Reserve').querySelectorAll('.piece-dot')
     fireEvent.click(blueCircles[0])
 
-    expect(trayCard('BLUE \\| Reserve').querySelectorAll('.bg-blue-400')).toHaveLength(4)
-    expect(document.querySelectorAll('circle[fill="#3b82f6"]')).toHaveLength(0)
+    expect(trayCard('BLUE \\| Reserve').querySelectorAll('.piece-dot')).toHaveLength(4)
+    expect(document.querySelectorAll('circle.fill-blue-piece')).toHaveLength(0)
   })
 })

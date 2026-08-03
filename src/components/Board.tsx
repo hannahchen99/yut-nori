@@ -60,20 +60,20 @@ const PERIMETER_EDGES: [number, number][] = [
 
 interface NodeStyle {
   r: number;
-  fill: string;
-  stroke: string;
+  fillClass: string;
+  strokeClass: string;
   strokeWidth: number;
-  labelFill: string;
+  labelClass: string;
   fontSize: number;
   fontWeight: 'normal' | 'bold';
 }
 
 const NODE_STYLES: Record<NodeType, NodeStyle> = {
-  regular: { r: 14, fill: '#ffffff', stroke: '#d1d5db', strokeWidth: 1.5, labelFill: '#6b7280', fontSize: 9,  fontWeight: 'normal' },
-  corner:  { r: 20, fill: '#fef3c7', stroke: '#d97706', strokeWidth: 2,   labelFill: '#92400e', fontSize: 11, fontWeight: 'bold'   },
-  center:  { r: 20, fill: '#fdf4ff', stroke: '#a21caf', strokeWidth: 2,   labelFill: '#6b21a8', fontSize: 11, fontWeight: 'bold'   },
-  diag1:   { r: 14, fill: '#f5f3ff', stroke: '#7c3aed', strokeWidth: 1.5, labelFill: '#5b21b6', fontSize: 9,  fontWeight: 'normal' },
-  diag2:   { r: 14, fill: '#ecfeff', stroke: '#0891b2', strokeWidth: 1.5, labelFill: '#155e75', fontSize: 9,  fontWeight: 'normal' },
+  regular: { r: 14, fillClass: 'fill-paper',      strokeClass: 'stroke-wood',    strokeWidth: 2, labelClass: 'fill-wood-muted', fontSize: 9,  fontWeight: 'normal' },
+  corner:  { r: 20, fillClass: 'fill-gold',        strokeClass: 'stroke-ink-red', strokeWidth: 3, labelClass: 'fill-ink-red',    fontSize: 11, fontWeight: 'bold'   },
+  center:  { r: 20, fillClass: 'fill-jade',        strokeClass: 'stroke-gold',    strokeWidth: 3, labelClass: 'fill-gold',       fontSize: 11, fontWeight: 'bold'   },
+  diag1:   { r: 14, fillClass: 'fill-parchment',   strokeClass: 'stroke-ink-red', strokeWidth: 2, labelClass: 'fill-ink-red',    fontSize: 9,  fontWeight: 'normal' },
+  diag2:   { r: 14, fillClass: 'fill-parchment',   strokeClass: 'stroke-jade',    strokeWidth: 2, labelClass: 'fill-jade',       fontSize: 9,  fontWeight: 'normal' },
 };
 
 function highlightRadius(type: NodeType): number {
@@ -84,13 +84,14 @@ const TOKEN_RADIUS = 12;
 const TOKEN_OFFSET = 12; // shifts the piece token up-right from the position node's center
 
 interface TokenStyle {
-  fill: string;
-  badgeText: string;
+  fillClass: string;
+  strokeClass: string;
+  badgeClass: string;
 }
 
 const TOKEN_STYLES: Record<Piece['team'], TokenStyle> = {
-  red: { fill: '#ef4444', badgeText: '#b91c1c' },
-  blue: { fill: '#3b82f6', badgeText: '#1d4ed8' },
+  red: { fillClass: 'fill-red-piece', strokeClass: 'stroke-red-piece', badgeClass: 'fill-red-piece-badge' },
+  blue: { fillClass: 'fill-blue-piece', strokeClass: 'stroke-blue-piece', badgeClass: 'fill-blue-piece-badge' },
 };
 
 // sort pieces on the board by position
@@ -134,8 +135,8 @@ export default function Board({
             key={`d-${a}-${b}`}
             x1={POSITIONS[a].x} y1={POSITIONS[a].y}
             x2={POSITIONS[b].x} y2={POSITIONS[b].y}
-            stroke="#d1d5db"
-            strokeWidth={2}
+            className="stroke-wood"
+            strokeWidth={2.5}
           />
         ))}
 
@@ -145,8 +146,8 @@ export default function Board({
             key={`p-${a}-${b}`}
             x1={POSITIONS[a].x} y1={POSITIONS[a].y}
             x2={POSITIONS[b].x} y2={POSITIONS[b].y}
-            stroke="#d1d5db"
-            strokeWidth={2}
+            className="stroke-wood"
+            strokeWidth={2.5}
           />
         ))}
 
@@ -160,15 +161,14 @@ export default function Board({
                   cx={pos.x} cy={pos.y}
                   r={highlightRadius(pos.type)}
                   fill="none"
-                  stroke="#3b82f6"
+                  className="stroke-gold"
                   strokeWidth={3}
                 />
               )}
               <circle
                 cx={pos.x} cy={pos.y}
                 r={s.r}
-                fill={s.fill}
-                stroke={s.stroke}
+                className={`${s.fillClass} ${s.strokeClass}`}
                 strokeWidth={s.strokeWidth}
               />
             </g>
@@ -186,7 +186,7 @@ export default function Board({
                 dominantBaseline="central"
                 fontSize={s.fontSize}
                 fontWeight={s.fontWeight}
-                fill={s.labelFill}
+                className={s.labelClass}
               >
                 {i}
               </text>
@@ -197,7 +197,7 @@ export default function Board({
                   textAnchor="middle"
                   fontSize={12}
                   fontWeight="bold"
-                  fill="#d97706"
+                  className="fill-ink-red"
                 >
                   HOME
                 </text>
@@ -222,8 +222,7 @@ export default function Board({
               <circle
                 cx={cx} cy={cy}
                 r={TOKEN_RADIUS}
-                fill={style.fill}
-                stroke="#ffffff"
+                className={`${style.fillClass} stroke-ink`}
                 strokeWidth={2}
               />
               {group.length > 1 && (
@@ -231,8 +230,7 @@ export default function Board({
                   <circle
                     cx={cx + 10} cy={cy - 10}
                     r={9}
-                    fill="#ffffff"
-                    stroke={style.fill}
+                    className={`fill-paper ${style.strokeClass}`}
                     strokeWidth={1.5}
                   />
                   <text
@@ -241,7 +239,7 @@ export default function Board({
                     dominantBaseline="central"
                     fontSize={11}
                     fontWeight="bold"
-                    fill={style.badgeText}
+                    className={style.badgeClass}
                   >
                     {group.length}
                   </text>

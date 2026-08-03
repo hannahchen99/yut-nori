@@ -16,17 +16,17 @@ describe('Board pieces', () => {
   it('renders one token per occupied position, no badge for a lone piece', () => {
     const pieces = [boardPiece('r0', 'red', 3), boardPiece('b0', 'blue', 10)]
     const { container } = render(<Board pieces={pieces} />)
-    expect(container.querySelectorAll('circle[fill="#ef4444"]')).toHaveLength(1)
-    expect(container.querySelectorAll('circle[fill="#3b82f6"]')).toHaveLength(1)
-    expect(container.querySelectorAll('circle[stroke="#ef4444"]')).toHaveLength(0)
+    expect(container.querySelectorAll('circle.fill-red-piece')).toHaveLength(1)
+    expect(container.querySelectorAll('circle.fill-blue-piece')).toHaveLength(1)
+    expect(container.querySelectorAll('circle.stroke-red-piece')).toHaveLength(0)
   })
 
   it('renders one token plus a count badge for a stack, not one token per piece', () => {
     const pieces = [boardPiece('r0', 'red', 3), boardPiece('r1', 'red', 3)]
     const { container } = render(<Board pieces={pieces} />)
-    expect(container.querySelectorAll('circle[fill="#ef4444"]')).toHaveLength(1)
-    expect(container.querySelectorAll('circle[stroke="#ef4444"]')).toHaveLength(1)
-    const badgeText = container.querySelector('circle[stroke="#ef4444"] + text')
+    expect(container.querySelectorAll('circle.fill-red-piece')).toHaveLength(1)
+    expect(container.querySelectorAll('circle.stroke-red-piece')).toHaveLength(1)
+    const badgeText = container.querySelector('circle.stroke-red-piece + text')
     expect(badgeText?.textContent).toBe('2')
   })
 
@@ -36,8 +36,8 @@ describe('Board pieces', () => {
       { id: 'b0', team: 'blue', location: { status: 'finished' }, stackedWith: [] },
     ]
     const { container } = render(<Board pieces={pieces} />)
-    expect(container.querySelectorAll('circle[fill="#ef4444"]')).toHaveLength(0)
-    expect(container.querySelectorAll('circle[fill="#3b82f6"]')).toHaveLength(0)
+    expect(container.querySelectorAll('circle.fill-red-piece')).toHaveLength(0)
+    expect(container.querySelectorAll('circle.fill-blue-piece')).toHaveLength(0)
   })
 })
 
