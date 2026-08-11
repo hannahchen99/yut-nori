@@ -3,7 +3,7 @@
 import { getYutResult, YutResult, YUT_MOVES } from '@/types/game';
 
 interface YutSticksProps {
-  result: number[];
+  result: number[] | null;
   onThrow: (sticks: number[], outcome: YutResult) => void;
   disabled?: boolean;
 }
@@ -17,11 +17,12 @@ const RESULT_LABELS: Record<YutResult, string> = {
 };
 
 export default function YutSticks({ result, onThrow, disabled = false }: YutSticksProps) {
-  const outcome = getYutResult(result);
+  const outcome = result ? getYutResult(result) : null;
+  const sticks: (number | null)[] = result ?? [null, null, null, null];
 
   function handleThrow() {
-    const sticks = Array.from({ length: 4 }, () => (Math.random() < 0.5 ? 0 : 1));
-    onThrow(sticks, getYutResult(sticks));
+    const newSticks = Array.from({ length: 4 }, () => (Math.random() < 0.5 ? 0 : 1));
+    onThrow(newSticks, getYutResult(newSticks));
   }
 
   return (
@@ -29,32 +30,36 @@ export default function YutSticks({ result, onThrow, disabled = false }: YutStic
       <h2 className="text-lg font-semibold text-heading">Yut Sticks</h2>
 
       <div className="flex gap-4">
-        {result.map((side, i) => (
+        {sticks.map((side, i) => (
           <div key={i} className="flex flex-col items-center gap-1">
             <div
               className={`w-10 h-24 rounded-2xl border-2 flex items-center justify-center transition-all ${
-                side === 0
+                side === null
+                  ? 'bg-parchment border-border'
+                  : side === 0
                   ? 'bg-paper border-wood shadow-inner'
                   : 'bg-wood-dark border-ink shadow-md'
               }`}
             >
-              {side === 0 ? (
+              {side === null ? (
+                <div className="w-2 h-2 rounded-full bg-faint opacity-50" />
+              ) : side === 0 ? (
                 <div className="w-6 h-0.5 bg-wood rounded" />
               ) : (
                 <div className="w-5 h-5 rounded-full border-2 border-gold opacity-70" />
               )}
             </div>
-            <span className="text-xs text-faint">{side === 0 ? 'flat' : 'round'}</span>
+            <span className="text-xs text-faint">{side === null ? '—' : side === 0 ? 'flat' : 'round'}</span>
           </div>
         ))}
       </div>
 
       <div className="text-center">
         <p className="text-sm font-medium text-wood-muted">
-          Flat up: {result.filter((s) => s === 0).length}
+          {result ? `Flat up: ${result.filter((s) => s === 0).length}` : 'Ready to throw'}
         </p>
         <p className="text-base font-bold text-ink-red mt-1">
-          {RESULT_LABELS[outcome]}
+          {outcome ? RESULT_LABELS[outcome] : ' '}
         </p>
       </div>
 

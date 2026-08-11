@@ -49,6 +49,15 @@
 
 <!-- Add new entries at the top, below this line -->
 
+## 2026-08-11
+
+### Lessons Learned
+- Learned to use the Frontend Developer and Code Reviewer agents to get a second opinion on UI work and diffs before committing — the code review agent in particular caught real issues (missing test coverage, a repeated ternary worth deduplicating) that were easy to miss reviewing solo.
+- Background agents are useful for longer, self-contained tasks (like a full manual playthrough for a UX audit) — they can run without blocking the main conversation, so other work keeps moving while they work.
+- Need to thoroughly check for test coverage before committing — asked "does page.test.tsx have a test for the finished condition?" after the fact and the answer was no, even though the game-over fix had already been reviewed and marked ready. Check test coverage as its own explicit step, not just something that surfaces if someone happens to ask.
+
+---
+
 ## 2026-08-03
 
 ### Lessons Learned

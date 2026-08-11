@@ -4,7 +4,8 @@ import { useReducer, useState } from 'react';
 import Board from '@/components/Board';
 import YutSticks from '@/components/YutSticks';
 import Tray, { Team } from '@/components/Tray';
-import { PieceId, YutResult } from '@/types/game';
+import GameOverBanner from '@/components/GameOverBanner';
+import { GameState, PieceId, YutResult } from '@/types/game';
 import gameReducer, { initialState } from '@/lib/game/stateMachine';
 
 const PHASE_LABELS: Record<typeof initialState.phase, string> = {
@@ -12,6 +13,11 @@ const PHASE_LABELS: Record<typeof initialState.phase, string> = {
   throwing: 'Throwing',
   moving: 'Moving',
   finished: 'Finished',
+};
+
+const TEAM_BADGE: Record<Team, { label: string; className: string }> = {
+  red: { label: 'Red', className: 'text-red-piece-badge' },
+  blue: { label: 'Blue', className: 'text-blue-piece-badge' },
 };
 
 const RESULT_NAMES: Record<YutResult, string> = {
@@ -22,9 +28,13 @@ const RESULT_NAMES: Record<YutResult, string> = {
   mo: '말 (Mo)',
 };
 
-export default function GamePage() {
-  const [state, dispatch] = useReducer(gameReducer, initialState);
-  const [sticks, setSticks] = useState<number[]>([0, 0, 0, 0]);
+interface GamePageProps {
+  initialGameState?: GameState;
+}
+
+export default function GamePage({ initialGameState = initialState }: GamePageProps = {}) {
+  const [state, dispatch] = useReducer(gameReducer, initialGameState);
+  const [sticks, setSticks] = useState<number[] | null>(null);
   const [selectedPieceId, setSelectedPieceId] = useState<PieceId | null>(null);
 
   function handleThrow(newSticks: number[], outcome: YutResult) {
@@ -34,6 +44,7 @@ export default function GamePage() {
 
   function handleStart() {
     dispatch({ type: 'START_GAME' });
+    setSticks(null);
   }
 
   function handlePieceClick(pieceId: PieceId) {
@@ -95,20 +106,24 @@ export default function GamePage() {
             />
           </div>
           <div className="flex-none flex flex-col items-center gap-6">
-            {state.phase === 'waiting' ? (
+            {state.phase === 'waiting' && (
               <button
                 onClick={handleStart}
                 className="px-6 py-2.5 bg-red-piece hover:bg-red-button-hover active:bg-red-button-active text-white font-semibold rounded-lg shadow transition-colors"
               >
                 Start Game
               </button>
-            ) : (
+            )}
+
+            {state.phase === 'finished' && state.winner && (
+              <GameOverBanner winner={state.winner} onPlayAgain={handleStart} />
+            )}
+
+            {state.phase !== 'waiting' && state.phase !== 'finished' && (
               <>
                 <p className="text-center">
-                  <span
-                    className={`font-bold ${state.currentTeam === 'red' ? 'text-red-piece-badge' : 'text-blue-piece-badge'}`}
-                  >
-                    {state.currentTeam === 'red' ? 'Red' : 'Blue'}&apos;s turn
+                  <span className={`font-bold ${TEAM_BADGE[state.currentTeam].className}`}>
+                    {TEAM_BADGE[state.currentTeam].label}&apos;s turn
                   </span>
                   <span className="text-faint"> — {PHASE_LABELS[state.phase]}</span>
                 </p>
@@ -148,37 +163,40 @@ export default function GamePage() {
                     ))}
                   </div>
                 )}
-                <div className="flex flex-row gap-6 p-4">
-                  <div className="flex flex-col gap-2">
-                    <Tray
-                      team="red"
-                      label="Reserve"
-                      pieces={filterTrayPieces("red", "reserve")}
-                      onPieceClick={handlePieceClick}
-                      selectable={state.phase === 'moving' && state.currentTeam === 'red'}
-                    />
-                    <Tray
-                      team="red"
-                      label="Home"
-                      pieces={filterTrayPieces("red", "finished")}
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Tray
-                      team="blue"
-                      label="Reserve"
-                      pieces={filterTrayPieces("blue", "reserve")}
-                      onPieceClick={handlePieceClick}
-                      selectable={state.phase === 'moving' && state.currentTeam === 'blue'}
-                    />
-                    <Tray
-                      team="blue"
-                      label="Home"
-                      pieces={filterTrayPieces("blue", "finished")}
-                    />
-                  </div>
-                </div>
               </>
+            )}
+
+            {state.phase !== 'waiting' && (
+              <div className="flex flex-row gap-6 p-4">
+                <div className="flex flex-col gap-2">
+                  <Tray
+                    team="red"
+                    label="Reserve"
+                    pieces={filterTrayPieces("red", "reserve")}
+                    onPieceClick={handlePieceClick}
+                    selectable={state.phase === 'moving' && state.currentTeam === 'red'}
+                  />
+                  <Tray
+                    team="red"
+                    label="Home"
+                    pieces={filterTrayPieces("red", "finished")}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Tray
+                    team="blue"
+                    label="Reserve"
+                    pieces={filterTrayPieces("blue", "reserve")}
+                    onPieceClick={handlePieceClick}
+                    selectable={state.phase === 'moving' && state.currentTeam === 'blue'}
+                  />
+                  <Tray
+                    team="blue"
+                    label="Home"
+                    pieces={filterTrayPieces("blue", "finished")}
+                  />
+                </div>
+              </div>
             )}
           </div>
         </div>
