@@ -18,7 +18,7 @@ export default function Home() {
             href="/game"
             className="px-8 py-3 bg-red-piece hover:bg-red-button-hover text-white font-semibold rounded-xl shadow-lg transition-colors text-lg"
           >
-            Create Game
+            Play Game
           </Link>
           <Link
             href="/how-to-play"

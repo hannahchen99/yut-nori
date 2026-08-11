@@ -63,17 +63,14 @@ interface NodeStyle {
   fillClass: string;
   strokeClass: string;
   strokeWidth: number;
-  labelClass: string;
-  fontSize: number;
-  fontWeight: 'normal' | 'bold';
 }
 
 const NODE_STYLES: Record<NodeType, NodeStyle> = {
-  regular: { r: 14, fillClass: 'fill-paper',      strokeClass: 'stroke-wood',    strokeWidth: 2, labelClass: 'fill-wood-muted', fontSize: 9,  fontWeight: 'normal' },
-  corner:  { r: 20, fillClass: 'fill-gold',        strokeClass: 'stroke-ink-red', strokeWidth: 3, labelClass: 'fill-ink-red',    fontSize: 11, fontWeight: 'bold'   },
-  center:  { r: 20, fillClass: 'fill-jade',        strokeClass: 'stroke-gold',    strokeWidth: 3, labelClass: 'fill-gold',       fontSize: 11, fontWeight: 'bold'   },
-  diag1:   { r: 14, fillClass: 'fill-parchment',   strokeClass: 'stroke-ink-red', strokeWidth: 2, labelClass: 'fill-ink-red',    fontSize: 9,  fontWeight: 'normal' },
-  diag2:   { r: 14, fillClass: 'fill-parchment',   strokeClass: 'stroke-jade',    strokeWidth: 2, labelClass: 'fill-jade',       fontSize: 9,  fontWeight: 'normal' },
+  regular: { r: 14, fillClass: 'fill-paper',      strokeClass: 'stroke-wood',    strokeWidth: 2 },
+  corner:  { r: 20, fillClass: 'fill-gold',        strokeClass: 'stroke-ink-red', strokeWidth: 3 },
+  center:  { r: 20, fillClass: 'fill-jade',        strokeClass: 'stroke-gold',    strokeWidth: 3 },
+  diag1:   { r: 14, fillClass: 'fill-parchment',   strokeClass: 'stroke-ink-red', strokeWidth: 2 },
+  diag2:   { r: 14, fillClass: 'fill-parchment',   strokeClass: 'stroke-jade',    strokeWidth: 2 },
 };
 
 function highlightRadius(type: NodeType): number {
@@ -175,36 +172,17 @@ export default function Board({
           );
         })}
 
-        {/* 4. Labels */}
-        {POSITIONS.map((pos, i) => {
-          const s = NODE_STYLES[pos.type];
-          return (
-            <g key={`l-${i}`}>
-              <text
-                x={pos.x} y={pos.y}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fontSize={s.fontSize}
-                fontWeight={s.fontWeight}
-                className={s.labelClass}
-              >
-                {i}
-              </text>
-              {i === 0 && (
-                <text
-                  x={pos.x}
-                  y={pos.y + s.r + 14}
-                  textAnchor="middle"
-                  fontSize={12}
-                  fontWeight="bold"
-                  className="fill-ink-red"
-                >
-                  HOME
-                </text>
-              )}
-            </g>
-          );
-        })}
+        {/* 4. Home label */}
+        <text
+          x={POSITIONS[0].x}
+          y={POSITIONS[0].y + NODE_STYLES.corner.r + 14}
+          textAnchor="middle"
+          fontSize={12}
+          fontWeight="bold"
+          className="fill-ink-red"
+        >
+          HOME
+        </text>
 
         {/* 5. Pieces */}
         {Array.from(pieceGroups.entries()).map(([position, group]) => {
