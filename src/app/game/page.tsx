@@ -1,11 +1,14 @@
 'use client';
 
 import { useReducer, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Board from '@/components/Board';
 import YutSticks from '@/components/YutSticks';
 import Tray, { Team } from '@/components/Tray';
 import GameOverBanner from '@/components/GameOverBanner';
 import Panel from '@/components/Panel';
+import LeaveGameDialog from '@/components/LeaveGameDialog';
 import { GameState, PieceId, YutResult } from '@/types/game';
 import gameReducer, { initialState } from '@/lib/game/stateMachine';
 
@@ -34,9 +37,19 @@ interface GamePageProps {
 }
 
 export default function GamePage({ initialGameState = initialState }: GamePageProps = {}) {
+  const router = useRouter();
   const [state, dispatch] = useReducer(gameReducer, initialGameState);
   const [sticks, setSticks] = useState<number[] | null>(null);
   const [selectedPieceId, setSelectedPieceId] = useState<PieceId | null>(null);
+  const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+  const gameInProgress = state.phase !== 'waiting' && state.phase !== 'finished';
+
+  function handleBackClick(e: React.MouseEvent) {
+    if (gameInProgress) {
+      e.preventDefault();
+      setShowLeaveConfirm(true);
+    }
+  }
 
   function handleThrow(newSticks: number[], outcome: YutResult) {
     setSticks(newSticks);
@@ -95,6 +108,13 @@ export default function GamePage({ initialGameState = initialState }: GamePagePr
   return (
     <main className="min-h-screen bg-paper">
       <div className="max-w-5xl mx-auto px-4 py-8">
+        <Link
+          href="/"
+          onClick={handleBackClick}
+          className="text-ink-red hover:text-red-button-active text-sm font-medium mb-8 inline-block"
+        >
+          ← Back to home
+        </Link>
         <h1 className="text-3xl font-extrabold mb-8 text-center text-ink-red">
           윷놀이 — Yut Nori
         </h1>
@@ -121,7 +141,7 @@ export default function GamePage({ initialGameState = initialState }: GamePagePr
               <GameOverBanner winner={state.winner} onPlayAgain={handleStart} />
             )}
 
-            {state.phase !== 'waiting' && state.phase !== 'finished' && (
+            {gameInProgress && (
               <>
                 <p className="text-center">
                   <span className={`font-bold ${TEAM_BADGE[state.currentTeam].className}`}>
@@ -206,6 +226,16 @@ export default function GamePage({ initialGameState = initialState }: GamePagePr
           </div>
         </div>
       </div>
+
+      {showLeaveConfirm && (
+        <LeaveGameDialog
+          onCancel={() => setShowLeaveConfirm(false)}
+          onConfirm={() => {
+            setShowLeaveConfirm(false);
+            router.push('/');
+          }}
+        />
+      )}
     </main>
   );
 }

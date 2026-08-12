@@ -3,9 +3,15 @@ import { render, screen, fireEvent, cleanup } from '@testing-library/react'
 import GamePage from '../page'
 import type { GameState } from '@/types/game'
 
+const mockPush = vi.fn()
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: mockPush }),
+}))
+
 afterEach(() => {
   cleanup()
   vi.restoreAllMocks()
+  mockPush.mockClear()
 })
 
 function mockThrow(flats: boolean[]) {
@@ -129,5 +135,40 @@ describe('GamePage move selection', () => {
 
     expect(trayCard('BLUE \\| Reserve').querySelectorAll('.piece-dot')).toHaveLength(4)
     expect(document.querySelectorAll('circle.fill-blue-piece')).toHaveLength(0)
+  })
+})
+
+describe('GamePage leave-game confirmation', () => {
+  it('does not show a confirmation when leaving before a game has started', () => {
+    render(<GamePage />)
+    fireEvent.click(screen.getByRole('link', { name: /Back to home/ }))
+    expect(screen.queryByText('Are you sure you want to leave the game?')).toBeNull()
+  })
+
+  it('does not show a confirmation when leaving after the game has finished', () => {
+    render(<GamePage initialGameState={wonState()} />)
+    fireEvent.click(screen.getByRole('link', { name: /Back to home/ }))
+    expect(screen.queryByText('Are you sure you want to leave the game?')).toBeNull()
+  })
+
+  it('shows a confirmation when leaving mid-game and Cancel dismisses the dialog and stays in the game', () => {
+    render(<GamePage />)
+    fireEvent.click(screen.getByRole('button', { name: 'Start Game' }))
+
+    fireEvent.click(screen.getByRole('link', { name: /Back to home/ }))
+    expect(screen.getByText('Are you sure you want to leave the game?')).toBeTruthy()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
+    expect(screen.queryByText('Are you sure you want to leave the game?')).toBeNull()
+    expect(mockPush).not.toHaveBeenCalled()
+  })
+
+  it('navigates home when Leave is confirmed', () => {
+    render(<GamePage />)
+    fireEvent.click(screen.getByRole('button', { name: 'Start Game' }))
+    fireEvent.click(screen.getByRole('link', { name: /Back to home/ }))
+
+    fireEvent.click(screen.getByRole('button', { name: 'Leave' }))
+    expect(mockPush).toHaveBeenCalledWith('/')
   })
 })
