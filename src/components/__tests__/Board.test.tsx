@@ -41,6 +41,26 @@ describe('Board pieces', () => {
   })
 })
 
+describe('Board selectedPieceId', () => {
+  it('draws a gold ring around the selected piece token, none for the other', () => {
+    const pieces = [boardPiece('r0', 'red', 3), boardPiece('b0', 'blue', 10)]
+    const { container } = render(<Board pieces={pieces} selectedPieceId="r0" />)
+    expect(container.querySelectorAll('circle.stroke-gold[r="18"]')).toHaveLength(1)
+  })
+
+  it('draws no selection ring when selectedPieceId is unset', () => {
+    const pieces = [boardPiece('r0', 'red', 3), boardPiece('b0', 'blue', 10)]
+    const { container } = render(<Board pieces={pieces} />)
+    expect(container.querySelectorAll('circle.stroke-gold[r="18"]')).toHaveLength(0)
+  })
+
+  it('rings the clickable (front) piece of a stack when its id is selected', () => {
+    const pieces = [boardPiece('r0', 'red', 3), boardPiece('r1', 'red', 3)]
+    const { container } = render(<Board pieces={pieces} selectedPieceId="r0" />)
+    expect(container.querySelectorAll('circle.stroke-gold[r="18"]')).toHaveLength(1)
+  })
+})
+
 describe('Diagonal 1 node positions (5 -> 20 -> 21 -> 22 -> 23 -> 24 -> 15)', () => {
   it('places 20 and 21 nearer corner 5, and 23 and 24 nearer corner 15', () => {
     expect(POSITIONS[20]).toEqual({ x: 417, y: 83, type: 'diag1' })

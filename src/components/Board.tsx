@@ -77,6 +77,10 @@ function highlightRadius(type: NodeType): number {
   return type === 'corner' || type === 'center' ? 26 : 20;
 }
 
+function Ring({ cx, cy, r }: { cx: number; cy: number; r: number }) {
+  return <circle cx={cx} cy={cy} r={r} fill="none" className="stroke-gold" strokeWidth={3} />;
+}
+
 const TOKEN_RADIUS = 12;
 const TOKEN_OFFSET = 12; // shifts the piece token up-right from the position node's center
 
@@ -108,6 +112,7 @@ interface BoardProps {
   pieces?: Piece[];
   onPieceClick?: (pieceId: PieceId) => void;
   selectableTeam?: Piece['team'];
+  selectedPieceId?: PieceId | null;
 }
 
 export default function Board({
@@ -115,6 +120,7 @@ export default function Board({
   pieces = [],
   onPieceClick,
   selectableTeam,
+  selectedPieceId = null,
 }: BoardProps) {
   const highlighted = new Set(highlightedPositions);
   const pieceGroups = groupBoardPiecesByPosition(pieces);
@@ -154,13 +160,7 @@ export default function Board({
           return (
             <g key={`c-${i}`}>
               {highlighted.has(i) && (
-                <circle
-                  cx={pos.x} cy={pos.y}
-                  r={highlightRadius(pos.type)}
-                  fill="none"
-                  className="stroke-gold"
-                  strokeWidth={3}
-                />
+                <Ring cx={pos.x} cy={pos.y} r={highlightRadius(pos.type)} />
               )}
               <circle
                 cx={pos.x} cy={pos.y}
@@ -181,7 +181,7 @@ export default function Board({
           fontWeight="bold"
           className="fill-ink-red"
         >
-          HOME
+          START
         </text>
 
         {/* 5. Pieces */}
@@ -197,6 +197,9 @@ export default function Board({
               onClick={clickable ? () => onPieceClick?.(group[0].id) : undefined}
               style={clickable ? { cursor: 'pointer' } : undefined}
             >
+              {group[0].id === selectedPieceId && (
+                <Ring cx={cx} cy={cy} r={TOKEN_RADIUS + 6} />
+              )}
               <circle
                 cx={cx} cy={cy}
                 r={TOKEN_RADIUS}

@@ -1,4 +1,4 @@
-import { Piece } from '@/types/game'
+import { Piece, PieceId } from '@/types/game'
 
 export type Team = 'red' | 'blue';
 
@@ -19,9 +19,10 @@ interface TrayProps {
   pieces: Piece[]
   onPieceClick?: (pieceId: Piece['id']) => void
   selectable?: boolean
+  selectedPieceId?: PieceId | null
 }
 
-export default function Tray({ team, label, pieces, onPieceClick, selectable = false }: TrayProps) {
+export default function Tray({ team, label, pieces, onPieceClick, selectable = false, selectedPieceId = null }: TrayProps) {
 
   const style = PIECE_STYLES[team]
 
@@ -31,7 +32,7 @@ export default function Tray({ team, label, pieces, onPieceClick, selectable = f
       <div className="flex flex-row items-center justify-evenly min-h-6">
         {pieces.map(p => (
           <div
-            className={`piece-dot w-6 h-6 rounded-full border-2 border-ink ${style.backgroundClass} ${selectable ? 'cursor-pointer hover:opacity-75 transition-opacity' : ''}`}
+            className={`piece-dot w-6 h-6 rounded-full border-2 border-ink ${style.backgroundClass} ${selectable ? 'cursor-pointer hover:opacity-75 transition-opacity' : ''} ${p.id === selectedPieceId ? 'ring-[3px] ring-gold ring-offset-2 ring-offset-paper' : ''}`}
             key={p.id}
             onClick={selectable ? () => onPieceClick?.(p.id) : undefined}
           />

@@ -49,6 +49,14 @@
 
 <!-- Add new entries at the top, below this line -->
 
+## 2026-08-12
+
+### Lessons Learned
+- Getting better at saving preferences for the future as they come up (e.g. adding tests proactively, commit message styling) instead of only fixing the immediate issue in front of me.
+- Learned to look out for duplicate code and run the code reviewer with a specific concern in mind (e.g. "is there a way to simplify the styling") rather than just a general review — a targeted ask surfaced a real duplication (two copy-pasted ring circles in `Board.tsx`) that got extracted into a shared `Ring` helper.
+
+---
+
 ## 2026-08-11
 
 ### Lessons Learned

@@ -6,10 +6,6 @@
 - [ ] Add back/home page button to game page `#navigation` `#ui`
 - [ ] Review rules page for accuracy `#content`
 - [ ] Fix: when two same-team pieces merge into a stack at the center junction (node 22) having arrived via different diagonals, the stack's future movement direction is governed by whichever piece's `enteredFrom` the player happens to dispatch with — the two pieces genuinely disagree about which diagonal they came from, and the board graph has no way to represent a stack with two valid exit directions `#bug` `#gameplay`
-- [ ] Fix game-over dead end: `state.winner` is never read and the Start button only renders when `phase === 'waiting'` — a won game just freezes with no announcement or replay option `#bug` `#gameplay`
-- [ ] Fix "HOME" naming collision in the UI: the board's entry square (`Board.tsx`) and the finished-pieces tray both display "Home" for unrelated concepts — same shape of bug as the `home`/`reserve` data-model collision fixed in `07f2bce`, resurfaced in the UI layer `#bug` `#ui` `#naming`
-- [ ] Fix misleading initial dice state: `sticks` initializes to `[0,0,0,0]`, which `getYutResult` reads as a real "윷 (Yut)" throw before the player has thrown anything — use `null` as a not-yet-thrown sentinel `#bug` `#ui`
-- [ ] Remove debug node-number labels from the board — the `{i}` text drawn on every node (`Board.tsx:179-207`) was for development only `#ui` `#board` `#cleanup`
 - [ ] Deploy to Vercel and get a live URL `#deployment`
 - [ ] Add feedback when a piece is captured — reserve/board counts just silently change with no toast, message, or animation, so a capture is easy to miss `#ui` `#gameplay`
 - [ ] Make move-selection order discoverable — clicking a pending-move chip first does nothing; you have to click a piece first, then a "Choose a move" list appears. The status line also highlights only one move even while two are pending, implying it's already selected `#ui` `#gameplay`
@@ -21,7 +17,6 @@
 - [ ] Add animation for throwing, moving, and capturing pieces (framer-motion is installed but unused) `#animation` `#sticks`
 - [ ] Look for opportunities to increase efficiency (e.g. const values, math-based move functions instead of map retrieval) `#architecture` `#performance`
 - [ ] Add move-preview highlighting — show the destination node before committing a move, using `Board`'s existing `highlightedPositions` prop `#ui` `#board` `#gameplay`
-- [ ] Highlight the selected piece on the board — `selectedPieceId` is tracked in state but never passed to `Board`/`Tray`, so nothing visually shows which piece is selected `#ui` `#board`
 - [ ] Memoize `filterTrayPieces`/`getBoardPieces` in `page.tsx` — recomputed every render, fine at current scale but worth `useMemo` if this pattern grows `#performance`
 - [ ] Use `GamePhase` type from `@/types/game` instead of `Record<typeof initialState.phase, string>` in `page.tsx` — more conventional, doesn't tie the type to a specific value's shape `#tooling`
 - [ ] Add `role="status"`/`aria-live="polite"` to the winner announcement so screen readers are notified when the game ends `#accessibility`

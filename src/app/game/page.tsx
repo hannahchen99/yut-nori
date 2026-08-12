@@ -103,6 +103,7 @@ export default function GamePage({ initialGameState = initialState }: GamePagePr
               pieces={getBoardPieces()}
               onPieceClick={handlePieceClick}
               selectableTeam={state.phase === 'moving' ? state.currentTeam : undefined}
+              selectedPieceId={selectedPieceId}
             />
           </div>
           <div className="flex-none flex flex-col items-center gap-6">
@@ -175,6 +176,7 @@ export default function GamePage({ initialGameState = initialState }: GamePagePr
                     pieces={filterTrayPieces("red", "reserve")}
                     onPieceClick={handlePieceClick}
                     selectable={state.phase === 'moving' && state.currentTeam === 'red'}
+                    selectedPieceId={selectedPieceId}
                   />
                   <Tray
                     team="red"
@@ -189,6 +191,7 @@ export default function GamePage({ initialGameState = initialState }: GamePagePr
                     pieces={filterTrayPieces("blue", "reserve")}
                     onPieceClick={handlePieceClick}
                     selectable={state.phase === 'moving' && state.currentTeam === 'blue'}
+                    selectedPieceId={selectedPieceId}
                   />
                   <Tray
                     team="blue"
