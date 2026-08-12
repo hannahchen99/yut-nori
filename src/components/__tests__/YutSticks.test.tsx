@@ -15,6 +15,12 @@ describe('YutSticks', () => {
     expect(screen.queryByText(/Move \d/)).toBeNull()
   })
 
+  it('renders no internal title heading — the section title is owned by the wrapping Panel', () => {
+    render(<YutSticks result={null} onThrow={() => {}} />)
+    expect(screen.queryByRole('heading')).toBeNull()
+    expect(screen.queryByText('Yut Sticks')).toBeNull()
+  })
+
   it('shows the flat/round sticks and result label for a real throw', () => {
     render(<YutSticks result={[0, 0, 0, 0]} onThrow={() => {}} />)
     expect(screen.getByText(/Flat up: 4/)).toBeTruthy()

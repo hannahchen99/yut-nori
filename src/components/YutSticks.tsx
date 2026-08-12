@@ -27,8 +27,6 @@ export default function YutSticks({ result, onThrow, disabled = false }: YutStic
 
   return (
     <div className="flex flex-col items-center gap-6">
-      <h2 className="text-lg font-semibold text-heading">Yut Sticks</h2>
-
       <div className="flex gap-4">
         {sticks.map((side, i) => (
           <div key={i} className="flex flex-col items-center gap-1">

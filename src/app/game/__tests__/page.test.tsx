@@ -60,6 +60,25 @@ describe('GamePage game-over wiring', () => {
   })
 })
 
+describe('GamePage panel treatment', () => {
+  it('wraps the yut sticks in a titled Panel', () => {
+    render(<GamePage />)
+    fireEvent.click(screen.getByRole('button', { name: 'Start Game' }))
+
+    const heading = screen.getByRole('heading', { name: 'Yut Sticks' })
+    expect(heading.closest('section')?.className).toContain('bg-surface')
+  })
+
+  it('lays out the red/blue tray columns on a two-column grid so both stay equal width', () => {
+    render(<GamePage />)
+    fireEvent.click(screen.getByRole('button', { name: 'Start Game' }))
+
+    const trayContainer = trayCard('RED \\| Reserve').closest('.grid') as HTMLElement
+    expect(trayContainer).toBeTruthy()
+    expect(trayContainer.className).toContain('grid-cols-2')
+  })
+})
+
 describe('GamePage move selection', () => {
   it('clicking a reserve piece with one pending move dispatches the move immediately', () => {
     render(<GamePage />)

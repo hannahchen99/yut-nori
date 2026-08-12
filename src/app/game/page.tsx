@@ -5,6 +5,7 @@ import Board from '@/components/Board';
 import YutSticks from '@/components/YutSticks';
 import Tray, { Team } from '@/components/Tray';
 import GameOverBanner from '@/components/GameOverBanner';
+import Panel from '@/components/Panel';
 import { GameState, PieceId, YutResult } from '@/types/game';
 import gameReducer, { initialState } from '@/lib/game/stateMachine';
 
@@ -133,11 +134,13 @@ export default function GamePage({ initialGameState = initialState }: GamePagePr
                     {instructionText}
                   </p>
                 )}
-                <YutSticks
-                  result={sticks}
-                  onThrow={handleThrow}
-                  disabled={state.phase !== 'throwing'}
-                />
+                <Panel title="Yut Sticks">
+                  <YutSticks
+                    result={sticks}
+                    onThrow={handleThrow}
+                    disabled={state.phase !== 'throwing'}
+                  />
+                </Panel>
                 {!selectedPieceId && state.pendingMoves.length > 1 && (
                   <div className="flex gap-2 justify-center">
                     {state.pendingMoves.map((move, index) => (
@@ -151,8 +154,7 @@ export default function GamePage({ initialGameState = initialState }: GamePagePr
                   </div>
                 )}
                 {selectedPieceId && state.pendingMoves.length > 1 && (
-                  <div className="rounded-lg border border-border bg-surface p-4 flex flex-col gap-2">
-                    <p className="text-sm font-medium text-wood-muted">Choose a move</p>
+                  <Panel title="Choose a move">
                     {state.pendingMoves.map((move, index) => (
                       <button
                         key={index}
@@ -162,13 +164,13 @@ export default function GamePage({ initialGameState = initialState }: GamePagePr
                         {RESULT_NAMES[move.result]} — Move {move.spaces}
                       </button>
                     ))}
-                  </div>
+                  </Panel>
                 )}
               </>
             )}
 
             {state.phase !== 'waiting' && (
-              <div className="flex flex-row gap-6 p-4">
+              <div className="grid grid-cols-2 gap-6 p-4">
                 <div className="flex flex-col gap-2">
                   <Tray
                     team="red"

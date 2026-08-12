@@ -1,4 +1,5 @@
 import { Piece, PieceId } from '@/types/game'
+import Panel from '@/components/Panel'
 
 export type Team = 'red' | 'blue';
 
@@ -27,7 +28,7 @@ export default function Tray({ team, label, pieces, onPieceClick, selectable = f
   const style = PIECE_STYLES[team]
 
   return (
-    <div className={`rounded-lg border bg-paper p-4 flex flex-col gap-2 ${style.borderClass}`}>
+    <Panel borderClassName={style.borderClass}>
       <p className={style.labelClass}>{`${team.toUpperCase()} | ${label} (${pieces.length})`}</p>
       <div className="flex flex-row items-center justify-evenly min-h-6">
         {pieces.map(p => (
@@ -38,6 +39,6 @@ export default function Tray({ team, label, pieces, onPieceClick, selectable = f
           />
         ))}
       </div>
-    </div>
+    </Panel>
   )
 }
