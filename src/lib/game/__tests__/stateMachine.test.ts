@@ -276,6 +276,25 @@ describe('MOVE_PIECE – stacking', () => {
     expect(after.pieces['b0'].stackedWith).toEqual([])
     expect(after.pieces['b1'].stackedWith).toEqual([])
   })
+
+  it('pieces stacking at junction 22 from different diagonals share one exit afterward, regardless of which one leads the next move', () => {
+    let s = startedState()
+    // r0 already resting at 22, having arrived via diagonal 1
+    s = setPiece(s, 'r0', { location: boardLoc(22, 21) })
+    // r1 arrives at 22 via diagonal 2 and stacks onto r0
+    s = setPiece(s, 'r1', { location: boardLoc(26, 25) })
+    s = inMoving(s, 1, 'do')
+    s = withMove(s, 'r1')
+    expect(s.pieces['r1'].location).toEqual(boardLoc(22, 26))
+    expect(s.pieces['r0'].location).toEqual(boardLoc(22, 26))
+    expect(s.pieces['r0'].stackedWith).toContain('r1')
+
+    // Departing led by r0 (the piece that did NOT just arrive) still exits via 27
+    s = inMoving(s, 1, 'do')
+    const after = withMove(s, 'r0')
+    expect(after.pieces['r0'].location).toEqual(boardLoc(27, 22))
+    expect(after.pieces['r1'].location).toEqual(boardLoc(27, 22))
+  })
 })
 
 // ─── Captures ─────────────────────────────────────────────────────────────────

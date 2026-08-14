@@ -5,7 +5,6 @@
 - [ ] Learn Next.js concepts in phase 1 `#learning`
 - [ ] Add back/home page button to game page `#navigation` `#ui`
 - [ ] Review rules page for accuracy `#content`
-- [ ] Fix: when two same-team pieces merge into a stack at the center junction (node 22) having arrived via different diagonals, the stack's future movement direction is governed by whichever piece's `enteredFrom` the player happens to dispatch with — the two pieces genuinely disagree about which diagonal they came from, and the board graph has no way to represent a stack with two valid exit directions `#bug` `#gameplay`
 - [ ] Deploy to Vercel and get a live URL `#deployment`
 - [ ] Add feedback when a piece is captured — reserve/board counts just silently change with no toast, message, or animation, so a capture is easy to miss `#ui` `#gameplay`
 - [ ] Make move-selection order discoverable — clicking a pending-move chip first does nothing; you have to click a piece first, then a "Choose a move" list appears. The status line also highlights only one move even while two are pending, implying it's already selected `#ui` `#gameplay`
