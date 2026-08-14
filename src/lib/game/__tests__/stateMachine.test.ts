@@ -79,12 +79,16 @@ describe('getNextPosition – outer perimeter', () => {
     expect(getNextPosition(0, null, 5)).toEqual({ position: 5, enteredFrom: 4 })
   })
 
-  it('piece reaching position 0 after a full loop is finished', () => {
-    expect(getNextPosition(19, 18, 1)).toEqual({ finished: true })
+  it('piece landing exactly on start (0) after a full loop stays in play, not finished', () => {
+    expect(getNextPosition(19, 18, 1)).toEqual({ position: 0, enteredFrom: 19 })
   })
 
-  it('piece overshooting position 0 after a full loop is finished', () => {
-    // 18→19→finished; movement stops once finished regardless of remaining steps
+  it('piece resting on start (0) after a full loop finishes on its next move', () => {
+    expect(getNextPosition(0, 19, 1)).toEqual({ finished: true })
+  })
+
+  it('piece overshooting start after a full loop is finished', () => {
+    // 18→19→0→finished; movement stops once finished regardless of remaining steps
     expect(getNextPosition(18, 17, 3)).toEqual({ finished: true })
   })
 })
@@ -360,9 +364,9 @@ describe('Win condition', () => {
     s = setPiece(s, 'r1', { location: { status: 'finished' } })
     s = setPiece(s, 'r2', { location: { status: 'finished' } })
     s = setPiece(s, 'r3', { location: { status: 'finished' } })
-    // r0 at position 19, 1 step → finished
+    // r0 at position 19, 2 steps → passes start (0) → finished
     s = setPiece(s, 'r0', { location: boardLoc(19, 18) })
-    s = inMoving(s, 1, 'do')
+    s = inMoving(s, 2, 'gae')
     const after = withMove(s, 'r0')
     expect(after.phase).toBe('finished')
     expect(after.winner).toBe('red')
@@ -374,7 +378,7 @@ describe('Win condition', () => {
     s = setPiece(s, 'r2', { location: { status: 'finished' } })
     // r3 still at home
     s = setPiece(s, 'r0', { location: boardLoc(19, 18) })
-    s = inMoving(s, 1, 'do')
+    s = inMoving(s, 2, 'gae')
     const after = withMove(s, 'r0')
     expect(after.phase).not.toBe('finished')
     expect(after.winner).toBeNull()

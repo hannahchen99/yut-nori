@@ -23,7 +23,10 @@ type BoardNode    = SimpleNode | JunctionNode
 
 const BOARD: Record<number, BoardNode> = {
   // Outer perimeter
-  0:  { kind: 'simple', next: 1  },
+  // 0 is a junction: reserve pieces (enteredFrom null) enter and continue to 1;
+  // a piece landing here after a full lap (enteredFrom 19) rests in play — it
+  // only finishes on its *next* move, one space past start.
+  0:  { kind: 'junction', exits: { [-1]: 1, 19: 'finished' } },
   1:  { kind: 'simple', next: 2  },
   2:  { kind: 'simple', next: 3  },
   3:  { kind: 'simple', next: 4  },
@@ -42,7 +45,7 @@ const BOARD: Record<number, BoardNode> = {
   16: { kind: 'simple', next: 17 },
   17: { kind: 'simple', next: 18 },
   18: { kind: 'simple', next: 19 },
-  19: { kind: 'simple', next: 'finished' },
+  19: { kind: 'simple', next: 0 },
   // Diagonal 1: 5→20→21→22→23→24→15
   20: { kind: 'simple', next: 21 },
   21: { kind: 'simple', next: 22 },

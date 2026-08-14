@@ -8,7 +8,6 @@
 - [ ] Deploy to Vercel and get a live URL `#deployment`
 - [ ] Add feedback when a piece is captured — reserve/board counts just silently change with no toast, message, or animation, so a capture is easy to miss `#ui` `#gameplay`
 - [ ] Make move-selection order discoverable — clicking a pending-move chip first does nothing; you have to click a piece first, then a "Choose a move" list appears. The status line also highlights only one move even while two are pending, implying it's already selected `#ui` `#gameplay`
-- [ ] Fix: a piece needs to move one space *past* start to finish — landing exactly on start should leave it there, still in play, not finish it. Right now the board graph finishes a piece as soon as a step would land it at or beyond start, with no state for "sitting on start, one more space needed" `#bug` `#gameplay`
 
 ## Nice to Have
 - [ ] Configure Prettier for consistent formatting (indentation, quote style, spacing) `#tooling`
