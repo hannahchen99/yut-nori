@@ -1,7 +1,5 @@
-import { Piece, PieceId } from '@/types/game'
+import { Piece, PieceId, Team, TEAM_TEXT_CLASS, TEAM_BG_CLASS } from '@/types/game'
 import Panel from '@/components/Panel'
-
-export type Team = 'red' | 'blue';
 
 interface PieceStyle {
   borderClass: string
@@ -10,8 +8,8 @@ interface PieceStyle {
 }
 
 const PIECE_STYLES: Record<Team, PieceStyle> = {
-  red: { borderClass: 'border-red-tray-border', labelClass: 'text-red-piece-badge', backgroundClass: 'bg-red-piece' },
-  blue: { borderClass: 'border-blue-tray-border', labelClass: 'text-blue-piece-badge', backgroundClass: 'bg-blue-piece' },
+  red: { borderClass: 'border-red-tray-border', labelClass: TEAM_TEXT_CLASS.red, backgroundClass: TEAM_BG_CLASS.red },
+  blue: { borderClass: 'border-blue-tray-border', labelClass: TEAM_TEXT_CLASS.blue, backgroundClass: TEAM_BG_CLASS.blue },
 }
 
 interface TrayProps {

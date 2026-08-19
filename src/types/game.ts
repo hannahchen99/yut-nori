@@ -1,3 +1,11 @@
+export type Team = 'red' | 'blue'
+
+// Shared team display data — the single source of truth reused by every
+// component that renders a team's label/color.
+export const TEAM_LABEL: Record<Team, string> = { red: 'Red', blue: 'Blue' }
+export const TEAM_TEXT_CLASS: Record<Team, string> = { red: 'text-red-piece-badge', blue: 'text-blue-piece-badge' }
+export const TEAM_BG_CLASS: Record<Team, string> = { red: 'bg-red-piece', blue: 'bg-blue-piece' }
+
 export type YutResult = 'do' | 'gae' | 'geol' | 'yut' | 'mo'
 
 export type YutMove = {
@@ -15,7 +23,7 @@ export type PieceLocation =
 
 export type Piece = {
   id: PieceId
-  team: 'red' | 'blue'
+  team: Team
   location: PieceLocation
   stackedWith: PieceId[]
 }
@@ -26,13 +34,21 @@ export type GamePhase =
   | 'moving'
   | 'finished'
 
+export type LastCapture = {
+  capturingTeam: Team
+  capturedTeam: Team
+  count: number
+  id: number
+}
+
 export type GameState = {
   phase: GamePhase
-  currentTeam: 'red' | 'blue'
+  currentTeam: Team
   pieces: Record<PieceId, Piece>
   pendingMoves: YutMove[]
-  winner: 'red' | 'blue' | null
+  winner: Team | null
   turnHistory: YutMove[]
+  lastCapture: LastCapture | null
 }
 
 export type GameAction =

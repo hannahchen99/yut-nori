@@ -1,6 +1,6 @@
 'use client';
 
-import { Team } from './Tray';
+import { Team, TEAM_LABEL, TEAM_BG_CLASS, TEAM_TEXT_CLASS } from '@/types/game';
 
 interface GameOverBannerProps {
   winner: Team;
@@ -8,8 +8,8 @@ interface GameOverBannerProps {
 }
 
 const WINNER_STYLES: Record<Team, { label: string; pieceClass: string; badgeClass: string }> = {
-  red: { label: 'Red', pieceClass: 'bg-red-piece', badgeClass: 'text-red-piece-badge' },
-  blue: { label: 'Blue', pieceClass: 'bg-blue-piece', badgeClass: 'text-blue-piece-badge' },
+  red: { label: TEAM_LABEL.red, pieceClass: TEAM_BG_CLASS.red, badgeClass: TEAM_TEXT_CLASS.red },
+  blue: { label: TEAM_LABEL.blue, pieceClass: TEAM_BG_CLASS.blue, badgeClass: TEAM_TEXT_CLASS.blue },
 };
 
 export default function GameOverBanner({ winner, onPlayAgain }: GameOverBannerProps) {

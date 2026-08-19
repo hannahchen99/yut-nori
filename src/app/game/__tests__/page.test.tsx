@@ -32,6 +32,7 @@ function wonState(): GameState {
     winner: 'red',
     pendingMoves: [],
     turnHistory: [],
+    lastCapture: null,
     pieces: {
       r0: { id: 'r0', team: 'red', location: { status: 'finished' }, stackedWith: [] },
       r1: { id: 'r1', team: 'red', location: { status: 'finished' }, stackedWith: [] },

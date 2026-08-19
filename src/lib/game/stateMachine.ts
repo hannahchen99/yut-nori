@@ -6,6 +6,7 @@ import type {
   PieceId,
   Piece,
   PieceLocation,
+  LastCapture,
 } from '@/types/game'
 
 // ─── Board adjacency graph ────────────────────────────────────────────────────
@@ -129,6 +130,10 @@ export function getNextPosition(
   return { position: pos, enteredFrom: from }
 }
 
+function oppositeTeam(team: 'red' | 'blue'): 'red' | 'blue' {
+  return team === 'red' ? 'blue' : 'red'
+}
+
 export function canStack(piece: Piece, targetPosition: number, state: GameState): boolean {
   const movingGroup = new Set<PieceId>([piece.id, ...piece.stackedWith])
   return Object.values(state.pieces).some(
@@ -175,6 +180,7 @@ export const initialState: GameState = {
   pendingMoves: [],
   winner: null,
   turnHistory: [],
+  lastCapture: null,
 }
 
 // ─── Reducer ──────────────────────────────────────────────────────────────────
@@ -189,6 +195,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         pendingMoves: [],
         winner: null,
         turnHistory: [],
+        lastCapture: null,
       }
     }
 
@@ -206,6 +213,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         pendingMoves: [...state.pendingMoves, move],
         turnHistory: [...state.turnHistory, move],
         phase: move.bonusThrow ? 'throwing' : 'moving',
+        lastCapture: null,
       }
     }
 
@@ -244,7 +252,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         }
       }
 
-      let wasCapture = false
+      let lastCapture: LastCapture | null = null
 
       if (newLocation.status === 'board') {
         const targetPos = newLocation.position
@@ -265,7 +273,14 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           for (const id of toHome) {
             pieces[id] = { ...pieces[id], location: { status: 'reserve' }, stackedWith: [] }
           }
-          wasCapture = true
+          lastCapture = {
+            capturingTeam: leader.team,
+            capturedTeam: oppositeTeam(leader.team),
+            count: toHome.size,
+            // increases by one each time, used to distinguish between back-to-back
+            // captures to ensure a re-render each time
+            id: (state.lastCapture?.id ?? 0) + 1,
+          }
         } else if (canStack(leader, targetPos, { ...state, pieces })) {
           // Collect all friendly pieces at targetPos not already in the moving group
           const allied: PieceId[] = []
@@ -301,21 +316,22 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           pendingMoves: [],
           phase: 'finished',
           winner: state.currentTeam,
+          lastCapture: null,
         }
       }
 
       // Next phase
       if (pendingMoves.length > 0) {
-        return { ...state, pieces, pendingMoves, phase: 'moving' }
+        return { ...state, pieces, pendingMoves, phase: 'moving', lastCapture }
       }
 
-      if (wasCapture) {
+      if (lastCapture) {
         // Bonus throw: same team throws again
-        return { ...state, pieces, pendingMoves: [], phase: 'throwing' }
+        return { ...state, pieces, pendingMoves: [], phase: 'throwing', lastCapture }
       }
 
       // End of turn: switch team
-      const nextTeam: 'red' | 'blue' = state.currentTeam === 'red' ? 'blue' : 'red'
+      const nextTeam: 'red' | 'blue' = oppositeTeam(state.currentTeam)
       return {
         ...state,
         pieces,
@@ -323,6 +339,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         phase: 'throwing',
         currentTeam: nextTeam,
         turnHistory: [],
+        lastCapture: null,
       }
     }
 

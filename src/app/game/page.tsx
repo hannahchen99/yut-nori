@@ -5,11 +5,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Board from '@/components/Board';
 import YutSticks from '@/components/YutSticks';
-import Tray, { Team } from '@/components/Tray';
+import Tray from '@/components/Tray';
 import GameOverBanner from '@/components/GameOverBanner';
+import CaptureBanner from '@/components/CaptureBanner';
 import Panel from '@/components/Panel';
 import LeaveGameDialog from '@/components/LeaveGameDialog';
-import { GameState, PieceId, YutResult } from '@/types/game';
+import { GameState, PieceId, Team, TEAM_LABEL, TEAM_TEXT_CLASS, YutResult } from '@/types/game';
 import gameReducer, { initialState } from '@/lib/game/stateMachine';
 
 const PHASE_LABELS: Record<typeof initialState.phase, string> = {
@@ -17,11 +18,6 @@ const PHASE_LABELS: Record<typeof initialState.phase, string> = {
   throwing: 'Throwing',
   moving: 'Moving',
   finished: 'Finished',
-};
-
-const TEAM_BADGE: Record<Team, { label: string; className: string }> = {
-  red: { label: 'Red', className: 'text-red-piece-badge' },
-  blue: { label: 'Blue', className: 'text-blue-piece-badge' },
 };
 
 const RESULT_NAMES: Record<YutResult, string> = {
@@ -144,8 +140,8 @@ export default function GamePage({ initialGameState = initialState }: GamePagePr
             {gameInProgress && (
               <>
                 <p className="text-center">
-                  <span className={`font-bold ${TEAM_BADGE[state.currentTeam].className}`}>
-                    {TEAM_BADGE[state.currentTeam].label}&apos;s turn
+                  <span className={`font-bold ${TEAM_TEXT_CLASS[state.currentTeam]}`}>
+                    {TEAM_LABEL[state.currentTeam]}&apos;s turn
                   </span>
                   <span className="text-faint"> — {PHASE_LABELS[state.phase]}</span>
                 </p>
@@ -153,6 +149,14 @@ export default function GamePage({ initialGameState = initialState }: GamePagePr
                   <p className="text-center font-semibold text-ink-red">
                     {instructionText}
                   </p>
+                )}
+                {state.lastCapture && (
+                  <CaptureBanner
+                    key={state.lastCapture.id}
+                    capturingTeam={state.lastCapture.capturingTeam}
+                    capturedTeam={state.lastCapture.capturedTeam}
+                    count={state.lastCapture.count}
+                  />
                 )}
                 <Panel title="Yut Sticks">
                   <YutSticks

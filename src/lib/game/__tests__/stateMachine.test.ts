@@ -337,6 +337,98 @@ describe('MOVE_PIECE – capture', () => {
   })
 })
 
+// Moves r0 (placed at 4) onto b0 (placed at 5) via a 1-space "do" — a capturing move.
+function capturingMove(s: GameState): GameState {
+  s = setPiece(s, 'r0', { location: boardLoc(4) })
+  s = setPiece(s, 'b0', { location: boardLoc(5) })
+  s = inMoving(s, 1, 'do')
+  return withMove(s, 'r0')
+}
+
+describe('MOVE_PIECE – lastCapture', () => {
+  it('records capturingTeam/capturedTeam/count/id for a single-piece capture', () => {
+    const after = capturingMove(startedState())
+    expect(after.lastCapture).toEqual({ capturingTeam: 'red', capturedTeam: 'blue', count: 1, id: 1 })
+  })
+
+  it('records count 2 when capturing a stack', () => {
+    let s = startedState()
+    s = setPiece(s, 'r0', { location: boardLoc(3) })
+    s = setPiece(s, 'b0', { location: boardLoc(5), stackedWith: ['b1'] })
+    s = setPiece(s, 'b1', { location: boardLoc(5), stackedWith: ['b0'] })
+    s = inMoving(s, 2, 'gae')
+    const after = withMove(s, 'r0')
+    expect(after.lastCapture).toEqual({ capturingTeam: 'red', capturedTeam: 'blue', count: 2, id: 1 })
+  })
+
+  it('stays null on a move that does not capture', () => {
+    let s = startedState()
+    s = setPiece(s, 'r0', { location: boardLoc(1) })
+    s = inMoving(s, 1, 'do')
+    const after = withMove(s, 'r0')
+    expect(after.lastCapture).toBeNull()
+  })
+
+  it('clears a previous capture on the next move if that move does not also capture', () => {
+    let s = capturingMove(startedState())
+    expect(s.lastCapture).not.toBeNull()
+
+    s = setPiece(s, 'r1', { location: boardLoc(1) })
+    s = inMoving(s, 1, 'do')
+    const after = withMove(s, 'r1') // no capture this time
+    expect(after.lastCapture).toBeNull()
+  })
+
+  it('clears on THROW_STICKS so the notice does not linger into the next throw', () => {
+    const s = capturingMove(startedState())
+    expect(s.lastCapture).not.toBeNull()
+
+    const after = withThrow(s, 'do')
+    expect(after.lastCapture).toBeNull()
+  })
+
+  it('is still set when a capturing move leaves other pending moves to resolve', () => {
+    let s = startedState()
+    s = setPiece(s, 'r0', { location: boardLoc(4) })
+    s = setPiece(s, 'b0', { location: boardLoc(5) })
+    s = {
+      ...s,
+      phase: 'moving',
+      pendingMoves: [
+        { result: 'do', spaces: 1, bonusThrow: false },
+        { result: 'gae', spaces: 2, bonusThrow: false },
+      ],
+    }
+    const after = withMove(s, 'r0', 0)
+    expect(after.phase).toBe('moving')
+    expect(after.lastCapture).toEqual({ capturingTeam: 'red', capturedTeam: 'blue', count: 1, id: 1 })
+  })
+
+  it('increments id across two captures resolved from the same throw, even when otherwise identical', () => {
+    // r0/b0 and r1/b1 are two independent capture setups, both resolved without
+    // an intervening THROW_STICKS — the exact scenario a stale key would collapse.
+    let s = startedState()
+    s = setPiece(s, 'r0', { location: boardLoc(4) })
+    s = setPiece(s, 'b0', { location: boardLoc(5) })
+    s = setPiece(s, 'r1', { location: boardLoc(9) })
+    s = setPiece(s, 'b1', { location: boardLoc(10) })
+    s = {
+      ...s,
+      phase: 'moving',
+      pendingMoves: [
+        { result: 'do', spaces: 1, bonusThrow: false },
+        { result: 'do', spaces: 1, bonusThrow: false },
+      ],
+    }
+
+    s = withMove(s, 'r0', 0) // captures b0
+    expect(s.lastCapture).toEqual({ capturingTeam: 'red', capturedTeam: 'blue', count: 1, id: 1 })
+
+    const after = withMove(s, 'r1', 0) // captures b1 — same shape except id
+    expect(after.lastCapture).toEqual({ capturingTeam: 'red', capturedTeam: 'blue', count: 1, id: 2 })
+  })
+})
+
 // ─── mo from home takes diagonal 1 ───────────────────────────────────────────
 
 describe('MOVE_PIECE – mo from home lands on corner 5 and takes diagonal 1', () => {
