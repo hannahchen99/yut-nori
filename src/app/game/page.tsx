@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Board from '@/components/Board';
 import YutSticks from '@/components/YutSticks';
-import Tray from '@/components/Tray';
+import Tray, { SELECTED_RING_CLASS } from '@/components/Tray';
 import GameOverBanner from '@/components/GameOverBanner';
 import CaptureBanner from '@/components/CaptureBanner';
 import Panel from '@/components/Panel';
@@ -37,6 +37,7 @@ export default function GamePage({ initialGameState = initialState }: GamePagePr
   const [state, dispatch] = useReducer(gameReducer, initialGameState);
   const [sticks, setSticks] = useState<number[] | null>(null);
   const [selectedPieceId, setSelectedPieceId] = useState<PieceId | null>(null);
+  const [selectedMoveIndex, setSelectedMoveIndex] = useState<number | null>(null);
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
   const gameInProgress = state.phase !== 'waiting' && state.phase !== 'finished';
 
@@ -57,23 +58,38 @@ export default function GamePage({ initialGameState = initialState }: GamePagePr
     setSticks(null);
   }
 
+  function commitMove(pieceId: PieceId, moveIndex: number) {
+    dispatch({ type: 'MOVE_PIECE', pieceId, moveIndex });
+    setSelectedPieceId(null);
+    setSelectedMoveIndex(null);
+  }
+
   function handlePieceClick(pieceId: PieceId) {
     if (pieceId === selectedPieceId) {
       setSelectedPieceId(null);
       return;
     }
     if (state.pendingMoves.length === 1) {
-      dispatch({ type: 'MOVE_PIECE', pieceId, moveIndex: 0 });
-      setSelectedPieceId(null);
+      commitMove(pieceId, 0);
+      return;
+    }
+    if (selectedMoveIndex !== null) {
+      commitMove(pieceId, selectedMoveIndex);
       return;
     }
     setSelectedPieceId(pieceId);
   }
 
-  function handleMoveChoice(moveIndex: number) {
-    if (!selectedPieceId) return;
-    dispatch({ type: 'MOVE_PIECE', pieceId: selectedPieceId, moveIndex });
-    setSelectedPieceId(null);
+  function handleMoveClick(moveIndex: number) {
+    if (moveIndex === selectedMoveIndex) { // move already selected, de-select
+      setSelectedMoveIndex(null);
+      return;
+    }
+    if (selectedPieceId !== null) {
+      commitMove(selectedPieceId, moveIndex);
+      return;
+    }
+    setSelectedMoveIndex(moveIndex);
   }
 
   function filterTrayPieces(team: Team, status: 'reserve' | 'finished') {
@@ -92,9 +108,11 @@ export default function GamePage({ initialGameState = initialState }: GamePagePr
     }
     if (state.phase === 'moving') {
       if (selectedPieceId) return 'Choose a move for the selected piece';
+      const selectedMove = selectedMoveIndex !== null ? state.pendingMoves[selectedMoveIndex] : undefined;
+      if (selectedMove) return `Select a piece to move ${selectedMove.spaces}`;
       return state.pendingMoves.length === 1
         ? `Select a piece to move ${state.pendingMoves[0].spaces}`
-        : 'Select a piece to move';
+        : 'Select a piece and a move';
     }
     return '';
   }
@@ -165,29 +183,26 @@ export default function GamePage({ initialGameState = initialState }: GamePagePr
                     disabled={state.phase !== 'throwing'}
                   />
                 </Panel>
-                {!selectedPieceId && state.pendingMoves.length > 1 && (
-                  <div className="flex gap-2 justify-center">
-                    {state.pendingMoves.map((move, index) => (
-                      <span
-                        key={index}
-                        className="bg-parchment border border-border text-ink-red rounded-full px-3 py-1 text-sm font-medium"
-                      >
-                        {RESULT_NAMES[move.result]} {move.spaces}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                {selectedPieceId && state.pendingMoves.length > 1 && (
+                {state.pendingMoves.length > 1 && (
                   <Panel title="Choose a move">
-                    {state.pendingMoves.map((move, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleMoveChoice(index)}
-                        className="px-3.5 py-2.5 bg-surface text-ink-red border border-border rounded-lg text-sm font-medium text-left hover:bg-parchment transition-colors"
-                      >
-                        {RESULT_NAMES[move.result]} — Move {move.spaces}
-                      </button>
-                    ))}
+                    {state.pendingMoves.map((move, index) => {
+                      const interactive = state.phase === 'moving';
+                      return (
+                        <button
+                          key={index}
+                          type="button"
+                          disabled={!interactive}
+                          onClick={interactive ? () => handleMoveClick(index) : undefined}
+                          className={`px-3.5 py-2.5 border rounded-lg text-sm font-medium text-left transition-colors ${
+                            interactive
+                              ? `bg-surface text-ink-red border-border hover:bg-parchment ${index === selectedMoveIndex ? SELECTED_RING_CLASS : ''}`
+                              : 'bg-parchment text-ink-red border-border opacity-70 cursor-default'
+                          }`}
+                        >
+                          {RESULT_NAMES[move.result]} — Move {move.spaces}
+                        </button>
+                      );
+                    })}
                   </Panel>
                 )}
               </>

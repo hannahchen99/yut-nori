@@ -1,6 +1,10 @@
 import { Piece, PieceId, Team, TEAM_TEXT_CLASS, TEAM_BG_CLASS } from '@/types/game'
 import Panel from '@/components/Panel'
 
+// Shared "selected" ring style — used wherever a piece, tray dot, or move
+// choice needs to show it's the player's current selection.
+export const SELECTED_RING_CLASS = 'ring-[3px] ring-gold ring-offset-2 ring-offset-paper'
+
 interface PieceStyle {
   borderClass: string
   labelClass: string
@@ -31,7 +35,7 @@ export default function Tray({ team, label, pieces, onPieceClick, selectable = f
       <div className="flex flex-row items-center justify-evenly min-h-6">
         {pieces.map(p => (
           <div
-            className={`piece-dot w-6 h-6 rounded-full border-2 border-ink ${style.backgroundClass} ${selectable ? 'cursor-pointer hover:opacity-75 transition-opacity' : ''} ${p.id === selectedPieceId ? 'ring-[3px] ring-gold ring-offset-2 ring-offset-paper' : ''}`}
+            className={`piece-dot w-6 h-6 rounded-full border-2 border-ink ${style.backgroundClass} ${selectable ? 'cursor-pointer hover:opacity-75 transition-opacity' : ''} ${p.id === selectedPieceId ? SELECTED_RING_CLASS : ''}`}
             key={p.id}
             onClick={selectable ? () => onPieceClick?.(p.id) : undefined}
           />

@@ -124,6 +124,79 @@ describe('GamePage move selection', () => {
     expect(screen.queryByText('Choose a move')).toBeNull()
   })
 
+  it('move buttons are disabled during a bonus-throw streak, before the moving phase begins', () => {
+    render(<GamePage />)
+    fireEvent.click(screen.getByRole('button', { name: 'Start Game' }))
+
+    mockThrow([true, true, true, true]) // flatCount 4 -> 'yut', bonus
+    fireEvent.click(screen.getByRole('button', { name: 'Throw Sticks' }))
+    mockThrow([false, false, false, false]) // flatCount 0 -> 'mo', bonus
+    fireEvent.click(screen.getByRole('button', { name: 'Throw Sticks' }))
+
+    // two pending moves, but still in the throwing phase — not moving yet
+    expect(screen.getByText('You get a bonus throw! Throw the sticks')).toBeTruthy()
+
+    const moveButton = screen.getByRole('button', { name: /Move 4/ }) as HTMLButtonElement
+    expect(moveButton.disabled).toBe(true)
+
+    fireEvent.click(moveButton)
+
+    // clicking a disabled button is a no-op — no selection, no instruction change
+    expect(moveButton.className).not.toContain('ring-gold')
+    expect(screen.getByText('You get a bonus throw! Throw the sticks')).toBeTruthy()
+  })
+
+  it('selecting a move before a piece dispatches the move once a piece is chosen', () => {
+    render(<GamePage />)
+    fireEvent.click(screen.getByRole('button', { name: 'Start Game' }))
+
+    mockThrow([true, true, true, true]) // flatCount 4 -> 'yut', bonus
+    fireEvent.click(screen.getByRole('button', { name: 'Throw Sticks' }))
+    mockThrow([true, true, false, false]) // flatCount 2 -> 'gae', non-bonus
+    fireEvent.click(screen.getByRole('button', { name: 'Throw Sticks' }))
+
+    fireEvent.click(screen.getByRole('button', { name: /Move 4/ }))
+    expect(screen.getByText('Select a piece to move 4')).toBeTruthy()
+    // no move applied yet — only the move itself is selected so far
+    expect(trayCard('RED \\| Reserve').querySelectorAll('.piece-dot')).toHaveLength(4)
+
+    fireEvent.click(trayCard('RED \\| Reserve').querySelectorAll('.piece-dot')[0])
+
+    expect(trayCard('RED \\| Reserve').querySelectorAll('.piece-dot')).toHaveLength(3)
+    expect(document.querySelectorAll('circle.fill-red-piece')).toHaveLength(1)
+  })
+
+  it('clicking an already-selected move deselects it', () => {
+    render(<GamePage />)
+    fireEvent.click(screen.getByRole('button', { name: 'Start Game' }))
+
+    mockThrow([true, true, true, true])
+    fireEvent.click(screen.getByRole('button', { name: 'Throw Sticks' }))
+    mockThrow([true, true, false, false])
+    fireEvent.click(screen.getByRole('button', { name: 'Throw Sticks' }))
+
+    const moveButton = screen.getByRole('button', { name: /Move 4/ })
+    fireEvent.click(moveButton)
+    expect(screen.getByText('Select a piece to move 4')).toBeTruthy()
+
+    fireEvent.click(moveButton)
+    expect(screen.getByText('Select a piece and a move')).toBeTruthy()
+  })
+
+  it('highlights the selected move with the same gold-ring style used for selected pieces', () => {
+    render(<GamePage />)
+    fireEvent.click(screen.getByRole('button', { name: 'Start Game' }))
+
+    mockThrow([true, true, true, true])
+    fireEvent.click(screen.getByRole('button', { name: 'Throw Sticks' }))
+    mockThrow([true, true, false, false])
+    fireEvent.click(screen.getByRole('button', { name: 'Throw Sticks' }))
+
+    const moveButton = screen.getByRole('button', { name: /Move 4/ })
+    fireEvent.click(moveButton)
+    expect(moveButton.className).toContain('ring-gold')
+  })
+
   it('pieces belonging to the other team are not clickable', () => {
     render(<GamePage />)
     fireEvent.click(screen.getByRole('button', { name: 'Start Game' }))

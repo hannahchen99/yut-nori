@@ -6,7 +6,6 @@
 - [ ] Add back/home page button to game page `#navigation` `#ui`
 - [ ] Review rules page for accuracy `#content`
 - [ ] Deploy to Vercel and get a live URL `#deployment`
-- [ ] Make move-selection order discoverable — clicking a pending-move chip first does nothing; you have to click a piece first, then a "Choose a move" list appears. The status line also highlights only one move even while two are pending, implying it's already selected `#ui` `#gameplay`
 
 ## Nice to Have
 - [ ] Configure Prettier for consistent formatting (indentation, quote style, spacing) `#tooling`
