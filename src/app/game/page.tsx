@@ -25,7 +25,7 @@ const RESULT_NAMES: Record<YutResult, string> = {
   gae: '개 (Gae)',
   geol: '걸 (Geol)',
   yut: '윷 (Yut)',
-  mo: '말 (Mo)',
+  mo: '모 (Mo)',
 };
 
 interface GamePageProps {

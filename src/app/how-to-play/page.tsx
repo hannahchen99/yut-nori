@@ -44,11 +44,11 @@ const sections: Section[] = [
           </thead>
           <tbody>
             {[
-              { flat: 0, name: 'Do', hangul: '도', spaces: 1, bonus: '' },
-              { flat: 1, name: 'Gae', hangul: '개', spaces: 2, bonus: '' },
-              { flat: 2, name: 'Geol', hangul: '걸', spaces: 3, bonus: '' },
-              { flat: 3, name: 'Yut', hangul: '윷', spaces: 4, bonus: '✓ extra throw' },
-              { flat: 4, name: 'Mo', hangul: '말', spaces: 5, bonus: '✓ extra throw' },
+              { flat: 1, name: 'Do', hangul: '도', spaces: 1, bonus: '' },
+              { flat: 2, name: 'Gae', hangul: '개', spaces: 2, bonus: '' },
+              { flat: 3, name: 'Geol', hangul: '걸', spaces: 3, bonus: '' },
+              { flat: 4, name: 'Yut', hangul: '윷', spaces: 4, bonus: '✓ extra throw' },
+              { flat: 0, name: 'Mo', hangul: '모', spaces: 5, bonus: '✓ extra throw' },
             ].map((row) => (
               <tr key={row.name} className="odd:bg-white even:bg-paper">
                 <td className="border border-border px-3 py-2">{row.flat}</td>
@@ -80,10 +80,9 @@ const sections: Section[] = [
     title: 'Shortcuts',
     content: (
       <p>
-        When a piece lands exactly on one of the four corner positions, it may take a
+        When a piece lands exactly on one of the top corner positions, it may take a
         diagonal shortcut across the board on its next move, significantly cutting the
-        distance to the finish. The center junction allows pieces to continue along
-        either diagonal path.
+        distance to the finish.
       </p>
     ),
   },
@@ -104,9 +103,9 @@ const sections: Section[] = [
     title: 'Winning',
     content: (
       <p>
-        The first team to move all four of their pieces past the Start/Finish position
-        (position 0) wins the game. A piece must land on or pass Start to exit — you
-        cannot move a piece past the finish line without enough spaces remaining.
+        The first team to move all four of their pieces past the starting position wins
+        the game. A piece must move at least one space past Start to finish — landing
+        exactly on Start leaves it in play.
       </p>
     ),
   },

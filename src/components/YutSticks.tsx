@@ -13,7 +13,7 @@ const RESULT_LABELS: Record<YutResult, string> = {
   gae: '개 (Gae) — Move 2',
   geol: '걸 (Geol) — Move 3',
   yut: '윷 (Yut) — Move 4 + bonus throw',
-  mo: '말 (Mo) — Move 5 + bonus throw',
+  mo: '모 (Mo) — Move 5 + bonus throw',
 };
 
 export default function YutSticks({ result, onThrow, disabled = false }: YutSticksProps) {
